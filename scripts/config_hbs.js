@@ -18,6 +18,15 @@ function default_(a,b)
         return b;
     return a;
 }
+
+/**
+ * @param {Date} date
+ * */
+function dateToFormat(date)
+{
+    return date.toLocaleDateString();
+}
+
 /**
  * @param {Instance} hbs
  * */
@@ -33,6 +42,7 @@ function init(hbs)
     hbs.registerHelper("default", (a,b) => default_(a,b));
 
     hbs.registerHelper("areSame", (a,b) => areSame(a,b));
+    hbs.registerHelper("dateFormat", (date) => dateToFormat(date));
 }
 
 
