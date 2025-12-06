@@ -125,6 +125,20 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
     res.redirect("/");
 })
 
+app.post("/games/:id/delete", async (req, res) => {
+    try{
+        await prisma.game.delete({
+            where: {
+                id: +req.params.id,
+            }
+        })
+        res.status(201).redirect("/games"); // On redirige vers la page des jeux
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ error: "game supression failed" });
+    }
+})
+
 app.get("/games/:id/edit", async (req, res) => {
     const id = +req.params.id;
 

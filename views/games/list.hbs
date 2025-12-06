@@ -3,6 +3,9 @@
     {{#each games}}
         <li>
             <a href="/games/{{id}}"><img src="{{filename}}"><b>{{title}}</b></a> <i>({{Year releaseDate}})</i>
+            <form action="/games/{{id}}/delete" method="post">
+                <input type="submit" value="Supprimer">
+            </form>
         </li>
     {{/each}}
 </ul>
