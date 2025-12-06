@@ -10,19 +10,33 @@ const prisma = new PrismaClient();
 const PORT = 8080;
 
 
+app.use(express.static('style'))
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
 app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
 hbs.registerPartials(path.join(__dirname, "views", "partials")); // On définit le dossier des partials (composants e.g. header, footer, menu...)
 
+//helpers
+hbs.registerHelper("Year", (date) => {
+    return new Date(date).getFullYear();
+});
 
 
 
 
-app.get("/", (req, res) => {
-    res.send("Hello World!");
+app.get("/", async (req, res) => {
+    const games = await prisma.game.findMany({
+        where: {
+            highlighted: true,
+        }
+    })
+    res.render("index",{
+        games,
+        title : "Accueil - Vapeur",
+        // styles : [{
+        //     href : "test.css"
+        // }],
+    });
 })
-
-
 
 
 

@@ -2,6 +2,12 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="global.css" />
+        <!-- on lie chaque style contenue dans href -->
+        {{#each styles}}
+            <link rel="stylesheet" href="{{href}}" />
+        {{/each}}
+        <title>{{title}}</title>
     </head>
     <body>
         {{{ body }}}
