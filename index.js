@@ -74,7 +74,7 @@ app.post("/games", upload.single("file"), async (req, res) => {
             desc,
             genreId,
             editorId,
-            highlighted : true,
+            highlighted : false,
             filename : `${name}`
         }
     })
@@ -115,6 +115,18 @@ app.get("/", async (req, res) => {
     });
 
     res.render("index",{
+        games,
+        title : "Accueil - Vapeur",
+        // styles : [{
+        //     href : "test.css"
+        // }],
+    });
+})
+
+app.get("/games", async (req, res) => {
+    const games = await prisma.game.findMany();
+
+    res.render("games/list",{
         games,
         title : "Accueil - Vapeur",
         // styles : [{
