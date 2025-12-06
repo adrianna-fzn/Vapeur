@@ -231,24 +231,24 @@ app.get("/", async (req, res) => {
 app.get("/games", async (req, res) => {
     const games = await prisma.game.findMany();
 
-    res.render("games/list",{
+    res.render("games/list", {
         games,
-        title : "Accueil - Vapeur",
+        title: "Accueil - Vapeur",
         // styles : [{
         //     href : "test.css"
         // }],
     });
-
+})
 
 //Ajouter/creer un editeur
 
 app.post("/editors", async (req, res) => {
     const { name } = req.body;
     try {
-    await prisma.editor.create({
-        data: { name },
-    });
-    res.status(201).redirect("/editors");
+        await prisma.editor.create({
+            data: { name },
+        });
+        res.status(201).redirect("/editors");
     } catch (err) {
         res.status(404).redirect("/zx");
     }
@@ -296,7 +296,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).send("Quelque chose s'est mal passé !");
-});
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);
