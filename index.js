@@ -9,6 +9,7 @@ const app = express();
 const prisma = new PrismaClient();
 const PORT = 8080;
 
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static('style'))
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
