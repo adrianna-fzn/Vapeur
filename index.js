@@ -21,8 +21,11 @@ hbs.registerHelper("Year", (date) => {
     return new Date(date).getFullYear();
 });
 
-
-
+//route vers la liste de des genres
+app.get("/genres", async (req, res) => {
+    const genres = await prisma.genre.findMany();
+    res.render("genres/index", { genres });
+})
 
 app.get("/", async (req, res) => {
     const games = await prisma.game.findMany({
