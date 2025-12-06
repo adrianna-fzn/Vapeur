@@ -276,6 +276,23 @@ app.get("/", async (req, res) => {
 
 
 
+app.post("/games/:id/highlight", async (req, res) => {
+    const game = await prisma.game.findFirst({
+        where: {
+            id: +req.params.id,
+        }
+    })
+    await prisma.game.update({
+        where: {
+            id: +req.params.id,
+        },
+        data: {
+            highlighted: !game.highlighted,
+        }
+    })
+    res.redirect("/games");
+})
+
 //Ajouter/creer un editeur
 
 app.post("/editors", async (req, res) => {
