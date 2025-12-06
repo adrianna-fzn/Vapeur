@@ -36,6 +36,6 @@ model Genre {
 //Table editeur, passée en clé étrangère à la table jeu
 model Editor {
   id   Int    @id @default(autoincrement())
-  name String
+  name String @unique
   Game Game[]
 }
