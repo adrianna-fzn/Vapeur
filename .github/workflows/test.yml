@@ -1,0 +1,38 @@
+name : "Test"
+
+on :
+  push:
+    branches:
+      - "**"
+
+jobs:
+  test:
+    runs-on: macos-latest
+    container:
+      image: node:20
+
+    steps:
+      - uses : actions/checkout@v6
+        with:
+          node-version : 20
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0
+        env:
+          GITHUB_TOKEN : ${{secrets.PAT}}
+
+      - name: git CONFIG
+        run: |
+          git config --global user.name "sylverstone-action"
+          git config --global user.email "e@nomail.com" 
+
+      - name : Installing Dependencies
+        run : |
+          npm i
+
+      - name : migrate prisma
+        run : |
+          npx prisma migrate production
+
+      - name : trying to start
+        run : |
+          npm run start
