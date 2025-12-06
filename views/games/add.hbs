@@ -1,6 +1,6 @@
 <h1>Ajoute un jeu !</h1>
 <form action="/games" method="POST" enctype="multipart/form-data">
-    
+
     <label for="title">Titre : </label>
     <input required type="text" name="title" id="title" placeholder="Le titre de votre jeu">
 
@@ -10,7 +10,7 @@
     <label for="desc"></label>
     <textarea required name="desc" id="desc" placeholder="Une belle description pour votre jeu ?" rows="3" cols="20"></textarea>
 
-    <input type="file" name="file" id="file">
+    <input type="file" name="file" id="file" required>
 
     <label for="genreId">Genre du jeu</label>
     <select id="genreId" name="genreId">

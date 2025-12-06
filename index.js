@@ -14,9 +14,6 @@ const PORT = 8080;
 
 const model = new CModel(prisma);
 
-
-
-
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static('style'))
@@ -29,6 +26,12 @@ hbs.registerPartials(path.join(__dirname, "views", "partials")); // On définit 
 hbs.registerHelper("Year", (date) => {
     return new Date(date).getFullYear();
 });
+
+//route vers la liste de des genres
+app.get("/genres", async (req, res) => {
+    const genres = await prisma.genre.findMany();
+    res.render("genres/index", { genres });
+})
 
 
 app.get("/games/add", async (req, res) => {
@@ -79,6 +82,30 @@ app.post("/games", upload.single("file"), async (req, res) => {
     res.redirect("/");
 });
 
+//--------------------------------------------------------------------------------
+app.get("/genres/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+        const genre = await prisma.genre.findUnique({
+            where: {
+                id: Number(id)
+            }, include: {
+                Game: true
+            }
+        });
+
+        res.render("genres/detail", {
+            genre,
+            games: genre.Game
+        });
+
+    } catch (err) {
+        res.status(404).redirect("/zx");
+    }
+
+})
+
+
 app.get("/", async (req, res) => {
 
     const games = await prisma.game.findMany({
@@ -94,6 +121,30 @@ app.get("/", async (req, res) => {
         //     href : "test.css"
         // }],
     });
+})
+
+//Affiche l'editeur qui correspond à l'id
+app.get("/editeurs/:id", async (req, res) => {
+    try{
+        console.log(req.params.id);
+        const editeur = await prisma.editor.findFirst({
+            where: {
+                id: Number(req.params.id),
+            },
+            include: {
+                Game: true //Récupère tous les jeux liés à l'éditeur
+            }
+        });
+
+        res.render("editors/detail", {
+            editeur,
+            games: editeur.Game,
+            title: `Editeur : ${editeur.name}`
+        });
+
+    } catch (err){//Gère l'erreur quand l'id n'existe pas
+        res.status(404).send("Cet éditeur n'existe pas !");
+    }
 })
 
 
