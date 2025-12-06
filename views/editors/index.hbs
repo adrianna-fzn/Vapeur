@@ -1,0 +1,10 @@
+<h1>liste editeurs</h1>
+
+<ul>
+    {{#each editors}}
+        <li>
+            <a href="/editors/{{id}}">{{name}}</a>
+            <!--  // on accède directement aux propriétés de l'objet courant-->
+        </li>
+    {{/each}}
+</ul>
