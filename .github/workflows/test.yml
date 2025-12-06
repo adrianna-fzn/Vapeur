@@ -31,7 +31,7 @@ jobs:
 
       - name : migrate prisma
         run : |
-          npx prisma migrate production
+          npx prisma migrate deploy
 
       - name : trying to start
         run : |
