@@ -1,0 +1,8 @@
+<h1>liste des jeux</h1>
+<ul>
+    {{#each games}}
+        <li>
+            <a href="/games/{{id}}"><img src="{{filename}}"><b>{{title}}</b></a> <i>({{Year releaseDate}})</i>
+        </li>
+    {{/each}}
+</ul>
