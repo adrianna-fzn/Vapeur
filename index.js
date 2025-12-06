@@ -139,6 +139,42 @@ app.post("/games/:id/delete", async (req, res) => {
     }
 })
 
+app.get("/games", async (req, res) => {
+    const games = await prisma.game.findMany();
+
+    res.render("games/list", {
+        games,
+        title: "Accueil - Vapeur",
+        // styles : [{
+        //     href : "test.css"
+        // }],
+    });
+})
+
+app.get("/games/:id", async (req, res) => {
+    const id = +req.params.id;
+
+    const game = await prisma.game.findFirst({
+        where : {
+            id
+        },
+        include : {
+            editor : true,
+            genre : true,
+        }
+    })
+
+    if(!game)
+    {
+        res.status(404).render("404", {
+            message : `Le jeu d'ID ${id} n'existe pas !`
+        });
+        return;
+    }
+
+    res.render("games/detail", { game });
+})
+
 app.get("/games/:id/edit", async (req, res) => {
     const id = +req.params.id;
 
@@ -238,17 +274,7 @@ app.get("/", async (req, res) => {
 })
 
 
-app.get("/games", async (req, res) => {
-    const games = await prisma.game.findMany();
 
-    res.render("games/list", {
-        games,
-        title: "Accueil - Vapeur",
-        // styles : [{
-        //     href : "test.css"
-        // }],
-    });
-})
 
 //Ajouter/creer un editeur
 
@@ -300,7 +326,9 @@ app.get("/editors/:id", async (req, res) => {
 
 
 app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, "404.html"));
+    res.status(404).render("404", {
+        message : "La page que vous cherchez n'existe pas !"
+    });
 })
 
 app.use((err, req, res, next) => {
