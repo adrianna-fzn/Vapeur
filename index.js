@@ -124,10 +124,10 @@ app.get("/", async (req, res) => {
 })
 
 //Affiche l'editeur qui correspond à l'id
-app.get("/editeurs/:id", async (req, res) => {
+app.get("/editors/:id", async (req, res) => {
     try{
         console.log(req.params.id);
-        const editeur = await prisma.editor.findFirst({
+        const editor = await prisma.editor.findFirst({
             where: {
                 id: Number(req.params.id),
             },
@@ -137,13 +137,13 @@ app.get("/editeurs/:id", async (req, res) => {
         });
 
         res.render("editors/detail", {
-            editeur,
-            games: editeur.Game,
-            title: `Editeur : ${editeur.name}`
+            editeur: editor,
+            games: editor.Game,
+            title: `Editeur : ${editor.name}`
         });
 
     } catch (err){//Gère l'erreur quand l'id n'existe pas
-        res.status(404).send("Cet éditeur n'existe pas !");
+        res.status(404).redirect("/zx");
     }
 })
 
