@@ -51,15 +51,35 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.post("/games", upload.single("file"), async (req, res) => {
+/**
+ * @param {Express.Request} req
+ * */
+async function getGameData(req)
+{
     let {title, releaseDate, desc, genreId, editorId : editorName}  = req.body;
 
     genreId = +genreId;
-    const editorId = await model.GetIDFromEditorName(editorName);
+    let editorId = await model.GetIDFromEditorName(editorName);
     if(editorId === -1)
     {
-        //FAUT AJOUTER UN EDITOR
+        editorId = await AddEditor(editorName);
+        if(editorId === false)
+            return {};
     }
+    return {title, releaseDate, desc, genreId, editorId};
+}
+
+app.post("/games", upload.single("file"), async (req, res) => {
+    // let {title, releaseDate, desc, genreId, editorId : editorName}  = req.body;
+    //
+    // genreId = +genreId;
+    // const editorId = await model.GetIDFromEditorName(editorName);
+    // if(editorId === -1)
+    // {
+    //     //FAUT AJOUTER UN EDITOR
+    // }
+
+    const {title, releaseDate,desc, editorId, genreId} = await getGameData(req);
 
     const name = req.file.filename;
 
@@ -95,14 +115,17 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
         }
     })
 
-    let {title, releaseDate, desc, genreId, editorId : editorName}  = req.body;
-
-    genreId = +genreId;
-    const editorId = await model.GetIDFromEditorName(editorName);
-    if(editorId === -1)
-    {
-        //FAUT AJOUTER UN EDITOR
-    }
+    // let {title, releaseDate, desc, genreId, editorId : editorName}  = req.body;
+    //
+    // genreId = +genreId;
+    // let editorId = await model.GetIDFromEditorName(editorName);
+    // if(editorId === -1)
+    // {
+    //     editorId = await AddEditor(editorName);
+    //     if(editorId === false)
+    //         return;
+    // }
+    const {title, releaseDate,desc, editorId, genreId} = await getGameData(req);
 
     const name = req.file ? req.file.filename : game.filename;
 
@@ -273,8 +296,28 @@ app.get("/", async (req, res) => {
     });
 })
 
+/**
+ * @param {String} name
+ * @return {boolean | number}
+ * */
+async function AddEditor(name)
+{
+    try {
+        /**
+         * @type {{
+         *     id : number,
+         *     name : string
+         * }}
+         * */
+        const editor = await prisma.editor.createManyAndReturn({
+            data:[{ name },],
+        });
 
-
+        return editor.id;
+    } catch (err) {
+        return false;
+    }
+}
 
 app.post("/games/:id/highlight", async (req, res) => {
     const game = await prisma.game.findFirst({
@@ -297,12 +340,11 @@ app.post("/games/:id/highlight", async (req, res) => {
 
 app.post("/editors", async (req, res) => {
     const { name } = req.body;
-    try {
-        await prisma.editor.create({
-            data: { name },
-        });
+    if(AddEditor(name) !== false)
+    {
         res.status(201).redirect("/editors");
-    } catch (err) {
+    }
+    else {
         res.status(404).redirect("/zx");
     }
 })
