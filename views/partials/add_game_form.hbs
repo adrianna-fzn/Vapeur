@@ -1,0 +1,42 @@
+<h1>{{form_title}}</h1>
+<form action="{{ default action "/games"}}" method="post" enctype="multipart/form-data">
+
+    <label for="title">Titre : </label>
+    <input required type="text" name="title" id="title" placeholder="Le titre de votre jeu" value="{{title}}">
+
+    <label for="releaseDate"></label>
+    <input required type="Date" name="releaseDate" id="releaseDate" value="{{date}}">
+
+    <label for="desc"></label>
+    <textarea required name="desc" id="desc" placeholder="Une belle description pour votre jeu ?" rows="3" cols="20">{{desc}}</textarea>
+
+    <input type="file" name="file" id="file" value="no-file"
+        {{#if file_required}}
+            required
+        {{/if}}
+    >
+
+    {{log genreName}}
+    <label for="genreId">Genre du jeu</label>
+    <select id="genreId" name="genreId">
+        {{#each genres}}
+            <option value="{{id}}"
+                    {{#if (areSame name ../genreName)  }}
+                        selected
+                    {{/if}}
+            >
+                {{name}}
+            </option>
+        {{/each}}
+    </select>
+
+    <label for="editorId">Editeur du jeu</label>
+    <input name="editorId"  id="editorId" list="editor-choice" required value="{{editorName}}" />
+    <datalist id="editor-choice" >
+        {{#each editors}}
+            <option>{{name}}</option>
+        {{/each}}
+    </datalist>
+
+    <input type="submit" value="{{ default submit_text "Ajouter"}}">
+</form>

@@ -1,33 +1,36 @@
-<h1>Ajoute un jeu !</h1>
-<form action="/games" method="POST" enctype="multipart/form-data">
+<!--<h1>Ajoute un jeu !</h1>-->
+<!--<form action="/games" method="POST" enctype="multipart/form-data">-->
 
-    <label for="title">Titre : </label>
-    <input required type="text" name="title" id="title" placeholder="Le titre de votre jeu">
+<!--    <label for="title">Titre : </label>-->
+<!--    <input required type="text" name="title" id="title" placeholder="Le titre de votre jeu">-->
 
-    <label for="releaseDate"></label>
-    <input required type="Date" name="releaseDate" id="releaseDate">
+<!--    <label for="releaseDate"></label>-->
+<!--    <input required type="Date" name="releaseDate" id="releaseDate">-->
 
-    <label for="desc"></label>
-    <textarea required name="desc" id="desc" placeholder="Une belle description pour votre jeu ?" rows="3" cols="20"></textarea>
+<!--    <label for="desc"></label>-->
+<!--    <textarea required name="desc" id="desc" placeholder="Une belle description pour votre jeu ?" rows="3" cols="20"></textarea>-->
 
-    <input type="file" name="file" id="file" required>
+<!--    <input type="file" name="file" id="file" required>-->
 
-    <label for="genreId">Genre du jeu</label>
-    <select id="genreId" name="genreId">
-        {{#each genres}}
-            <option value="{{id}}">
-                {{name}}
-            </option>
-        {{/each}}
-    </select>
+<!--    <label for="genreId">Genre du jeu</label>-->
+<!--    <select id="genreId" name="genreId">-->
+<!--        {{#each genres}}-->
+<!--            <option value="{{id}}">-->
+<!--                {{name}}-->
+<!--            </option>-->
+<!--        {{/each}}-->
+<!--    </select>-->
 
-    <label for="editorId">Editeur du jeu</label>
-    <input name="editorId"  id="editorId" list="editor-choice" required />
-    <datalist id="editor-choice" >
-        {{#each editors}}
-            <option>{{name}}</option>
-        {{/each}}
-    </datalist>
+<!--    <label for="editorId">Editeur du jeu</label>-->
+<!--    <input name="editorId"  id="editorId" list="editor-choice" required />-->
+<!--    <datalist id="editor-choice" >-->
+<!--        {{#each editors}}-->
+<!--            <option>{{name}}</option>-->
+<!--        {{/each}}-->
+<!--    </datalist>-->
 
-    <input type="submit" value="Ajoute">
-</form>
+<!--    <input type="submit" value="Ajoute">-->
+<!--</form>-->
+{{> add_game_form form_title="Ajout d'un jeu"
+    file_required=1
+}}

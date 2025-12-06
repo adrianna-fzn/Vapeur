@@ -4,9 +4,12 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
 const hbs = require("hbs");
+const {Instance} = require("hbs");
+
 const multer = require("multer");
 
 const {CModel} = require("./scripts/model");
+const {init} = require("./scripts/config_hbs");
 
 const app = express();
 const prisma = new PrismaClient();
@@ -20,12 +23,8 @@ app.use(express.static('style'))
 app.use(express.static('uploads'))
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
 app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
-hbs.registerPartials(path.join(__dirname, "views", "partials")); // On définit le dossier des partials (composants e.g. header, footer, menu...)
 
-//helpers
-hbs.registerHelper("Year", (date) => {
-    return new Date(date).getFullYear();
-});
+init(hbs);
 
 //route vers la liste de des genres
 app.get("/genres", async (req, res) => {
@@ -34,15 +33,6 @@ app.get("/genres", async (req, res) => {
 })
 
 
-app.get("/games/add", async (req, res) => {
-    const editors = await prisma.editor.findMany();
-    const genres = await prisma.genre.findMany();
-
-    res.render(path.join("games","add"),{
-        editors,
-        genres
-    });
-})
 
 
 // Configuration du stockage des fichiers
@@ -76,11 +66,114 @@ app.post("/games", upload.single("file"), async (req, res) => {
             editorId,
             highlighted : true,
             filename : `${name}`
+
         }
     })
 
     res.redirect("/");
 });
+
+app.get("/games/add", async (req, res) => {
+
+    const {editors,genres} = await model.GetEditorsAndGenres();
+    res.render(path.join("games","add"),{
+        editors,
+        genres
+    });
+})
+
+app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
+
+    const game = await prisma.game.findFirst({
+        where: {
+            id: +req.params.id,
+        }
+    })
+
+    let {title, releaseDate, desc, genreId, editorId : editorName}  = req.body;
+
+    genreId = +genreId;
+    const editorId = await model.GetIDFromEditorName(editorName);
+    if(editorId === -1)
+    {
+        //FAUT AJOUTER UN EDITOR
+    }
+
+    const name = req.file ? req.file.filename : game.filename;
+
+    await prisma.game.update({
+        data : {
+            title,
+            releaseDate : new Date(releaseDate),
+            desc,
+            genreId,
+            editorId,
+            highlighted : game.highlighted,
+            filename : `${name}`
+        },
+
+        where : {
+            id : game.id
+        }
+    })
+
+    res.redirect("/");
+})
+
+app.get("/games/:id/edit", async (req, res) => {
+    const id = +req.params.id;
+
+    /**
+     * @type {{
+     *     id : number,
+     *     title : string,
+     *     desc : string,
+     *     releaseDate : Date,
+     *     genre : { name : string},
+     *     genreId : number,
+     *     editor : {name : string},
+     *     editorId : string,
+     *     highlighted : boolean,
+     *     filename : string
+     * }}
+     * */
+    const game = await prisma.game.findFirst({
+        where : {
+            id
+        },
+        include : {
+            editor : true,
+            genre : true
+        }
+    });
+
+
+    const {editors,genres} = await model.GetEditorsAndGenres();
+
+    if(!game)
+    {
+        res.status(404).redirect('/');
+        return;
+    }
+
+    /**@type {Date} */
+    const date = game.releaseDate;
+
+
+    console.log(game.genre);
+    res.render("games/edit", {
+        form_title : `Modification du jeu ${game.title}`,
+        title : game.title,
+        desc : game.desc,
+        genreName : game.genre.name,
+        editorName : game.editor.name,
+        editors,
+        genres,
+        date: date.toISOString().split("T")[0],
+        submit_text : "Modifier",
+        action:`/games/${game.id}/edit`
+    })
+})
 
 //--------------------------------------------------------------------------------
 app.get("/genres/:id", async (req, res) => {
