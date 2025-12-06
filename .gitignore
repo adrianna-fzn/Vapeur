@@ -1,1 +1,7 @@
+/generated/prisma
 
+node_modules/
+.env
+.idea/
+.vscode/
+prisma/database.db
