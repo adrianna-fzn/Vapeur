@@ -9,6 +9,7 @@ const app = express();
 const prisma = new PrismaClient();
 const PORT = 8080;
 
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static('style'))
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
@@ -20,8 +21,11 @@ hbs.registerHelper("Year", (date) => {
     return new Date(date).getFullYear();
 });
 
-
-
+//route vers la liste de des genres
+app.get("/genres", async (req, res) => {
+    const genres = await prisma.genre.findMany();
+    res.render("genres/index", { genres });
+})
 
 app.get("/", async (req, res) => {
     const games = await prisma.game.findMany({
