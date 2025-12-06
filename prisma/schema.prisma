@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//Table jeu, avec id, titre, description, date de sortie, Genre et editeur passé en clés étrangères
+//Table jeu, avec id, titre, description, date de sortie, genres et editeur passé en clés étrangères
 model Game {
   id          Int      @id @default(autoincrement())
   title       String
@@ -26,7 +26,7 @@ model Game {
   highlighted Boolean  @default(false)
 }
 
-//Table Genre, passée en clé étrangère à la table jeu
+//Table genres, passée en clé étrangère à la table jeu
 model Genre {
   id   Int    @id @default(autoincrement())
   name String
