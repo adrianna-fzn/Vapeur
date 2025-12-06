@@ -7,6 +7,7 @@ const hbs = require("hbs");
 const multer = require("multer");
 
 const {CModel} = require("./scripts/model");
+const {init} = require("./scripts/config_hbs");
 
 const app = express();
 const prisma = new PrismaClient();
@@ -20,12 +21,7 @@ app.use(express.static('style'))
 app.use(express.static('uploads'))
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
 app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
-hbs.registerPartials(path.join(__dirname, "views", "partials")); // On définit le dossier des partials (composants e.g. header, footer, menu...)
-
-//helpers
-hbs.registerHelper("Year", (date) => {
-    return new Date(date).getFullYear();
-});
+init(hbs);
 
 //route vers la liste de des genres
 app.get("/genres", async (req, res) => {
