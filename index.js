@@ -4,12 +4,9 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
 const hbs = require("hbs");
-const {Instance} = require("hbs");
-
 const multer = require("multer");
 
 const {CModel} = require("./scripts/model");
-const {init} = require("./scripts/config_hbs");
 
 const app = express();
 const prisma = new PrismaClient();
@@ -23,8 +20,12 @@ app.use(express.static('style'))
 app.use(express.static('uploads'))
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
 app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
+hbs.registerPartials(path.join(__dirname, "views", "partials")); // On définit le dossier des partials (composants e.g. header, footer, menu...)
 
-init(hbs);
+//helpers
+hbs.registerHelper("Year", (date) => {
+    return new Date(date).getFullYear();
+});
 
 //route vers la liste de des genres
 app.get("/genres", async (req, res) => {
@@ -33,6 +34,15 @@ app.get("/genres", async (req, res) => {
 })
 
 
+app.get("/games/add", async (req, res) => {
+    const editors = await prisma.editor.findMany();
+    const genres = await prisma.genre.findMany();
+
+    res.render(path.join("games","add"),{
+        editors,
+        genres
+    });
+})
 
 
 // Configuration du stockage des fichiers
@@ -66,7 +76,6 @@ app.post("/games", upload.single("file"), async (req, res) => {
             editorId,
             highlighted : true,
             filename : `${name}`
-
         }
     })
 
@@ -176,6 +185,7 @@ app.get("/games/:id/edit", async (req, res) => {
 })
 
 //--------------------------------------------------------------------------------
+
 app.get("/genres/:id", async (req, res) => {
     const id = req.params.id;
     try {
@@ -199,6 +209,7 @@ app.get("/genres/:id", async (req, res) => {
 })
 
 
+//jeux mis en avant
 app.get("/", async (req, res) => {
 
     const games = await prisma.game.findMany({
@@ -214,6 +225,43 @@ app.get("/", async (req, res) => {
         //     href : "test.css"
         // }],
     });
+})
+
+
+app.get("/games", async (req, res) => {
+    const games = await prisma.game.findMany();
+
+    res.render("games/list",{
+        games,
+        title : "Accueil - Vapeur",
+        // styles : [{
+        //     href : "test.css"
+        // }],
+    });
+
+
+//Ajouter/creer un editeur
+
+app.post("/editors", async (req, res) => {
+    const { name } = req.body;
+    try {
+    await prisma.editor.create({
+        data: { name },
+    });
+    res.status(201).redirect("/editors");
+    } catch (err) {
+        res.status(404).redirect("/zx");
+    }
+})
+
+app.get("/editors/add", async (req, res) => {
+
+    res.render("editors/add");
+})
+
+app.get("/editors", async (req, res) => {
+    const editors = await prisma.editor.findMany();
+    res.render("editors/index", { editors });
 })
 
 //Affiche l'editeur qui correspond à l'id
@@ -252,4 +300,4 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);
-});
+})

@@ -1,7 +1,11 @@
 <h1>{{editor.name}}</h1>
 
+{{#if games}}
 <ul>
 {{#each games}}
   <li>{{title}}</li>
 {{/each}}
 </ul>
+{{else}}
+<p>Il n'y a aucun jeu correspondant à cet éditeur</p>
+{{/if}}
