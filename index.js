@@ -33,6 +33,8 @@ app.get("/genres", async (req, res) => {
     res.render("genres/index", { genres });
 })
 
+//affiche les jeux en fonction des genres
+
 
 app.get("/games/add", async (req, res) => {
     const editors = await prisma.editor.findMany();
@@ -82,7 +84,7 @@ app.post("/games", upload.single("file"), async (req, res) => {
     res.redirect("/");
 });
 
-//--------------------------------------------------------------------------------
+
 app.get("/genres/:id", async (req, res) => {
     const id = req.params.id;
     try {
@@ -106,6 +108,7 @@ app.get("/genres/:id", async (req, res) => {
 })
 
 
+//jeux mis en avant
 app.get("/", async (req, res) => {
 
     const games = await prisma.game.findMany({
@@ -123,6 +126,7 @@ app.get("/", async (req, res) => {
     });
 })
 
+
 app.get("/games", async (req, res) => {
     const games = await prisma.game.findMany();
 
@@ -133,13 +137,37 @@ app.get("/games", async (req, res) => {
         //     href : "test.css"
         // }],
     });
+
+
+//Ajouter/creer un editeur
+
+app.post("/editors", async (req, res) => {
+    const { name } = req.body;
+    try {
+    await prisma.editor.create({
+        data: { name },
+    });
+    res.status(201).redirect("/editors");
+    } catch (err) {
+        res.status(404).redirect("/zx");
+    }
+})
+
+app.get("/editors/add", async (req, res) => {
+
+    res.render("editors/add");
+})
+
+app.get("/editors", async (req, res) => {
+    const editors = await prisma.editor.findMany();
+    res.render("editors/index", { editors });
 })
 
 //Affiche l'editeur qui correspond à l'id
-app.get("/editeurs/:id", async (req, res) => {
+app.get("/editors/:id", async (req, res) => {
     try{
         console.log(req.params.id);
-        const editeur = await prisma.editor.findFirst({
+        const editor = await prisma.editor.findFirst({
             where: {
                 id: Number(req.params.id),
             },
@@ -149,13 +177,13 @@ app.get("/editeurs/:id", async (req, res) => {
         });
 
         res.render("editors/detail", {
-            editeur,
-            games: editeur.Game,
-            title: `Editeur : ${editeur.name}`
+            editeur: editor,
+            games: editor.Game,
+            title: `Editeur : ${editor.name}`
         });
 
     } catch (err){//Gère l'erreur quand l'id n'existe pas
-        res.status(404).send("Cet éditeur n'existe pas !");
+        res.status(404).redirect("/zx");
     }
 })
 
