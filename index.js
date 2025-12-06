@@ -33,8 +33,6 @@ app.get("/genres", async (req, res) => {
     res.render("genres/index", { genres });
 })
 
-//affiche les jeux en fonction des genres
-
 
 app.get("/games/add", async (req, res) => {
     const editors = await prisma.editor.findMany();
@@ -76,7 +74,7 @@ app.post("/games", upload.single("file"), async (req, res) => {
             desc,
             genreId,
             editorId,
-            highlighted : false,
+            highlighted : true,
             filename : `${name}`
         }
     })
@@ -84,6 +82,109 @@ app.post("/games", upload.single("file"), async (req, res) => {
     res.redirect("/");
 });
 
+app.get("/games/add", async (req, res) => {
+
+    const {editors,genres} = await model.GetEditorsAndGenres();
+    res.render(path.join("games","add"),{
+        editors,
+        genres
+    });
+})
+
+app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
+
+    const game = await prisma.game.findFirst({
+        where: {
+            id: +req.params.id,
+        }
+    })
+
+    let {title, releaseDate, desc, genreId, editorId : editorName}  = req.body;
+
+    genreId = +genreId;
+    const editorId = await model.GetIDFromEditorName(editorName);
+    if(editorId === -1)
+    {
+        //FAUT AJOUTER UN EDITOR
+    }
+
+    const name = req.file ? req.file.filename : game.filename;
+
+    await prisma.game.update({
+        data : {
+            title,
+            releaseDate : new Date(releaseDate),
+            desc,
+            genreId,
+            editorId,
+            highlighted : game.highlighted,
+            filename : `${name}`
+        },
+
+        where : {
+            id : game.id
+        }
+    })
+
+    res.redirect("/");
+})
+
+app.get("/games/:id/edit", async (req, res) => {
+    const id = +req.params.id;
+
+    /**
+     * @type {{
+     *     id : number,
+     *     title : string,
+     *     desc : string,
+     *     releaseDate : Date,
+     *     genre : { name : string},
+     *     genreId : number,
+     *     editor : {name : string},
+     *     editorId : string,
+     *     highlighted : boolean,
+     *     filename : string
+     * }}
+     * */
+    const game = await prisma.game.findFirst({
+        where : {
+            id
+        },
+        include : {
+            editor : true,
+            genre : true
+        }
+    });
+
+
+    const {editors,genres} = await model.GetEditorsAndGenres();
+
+    if(!game)
+    {
+        res.status(404).redirect('/');
+        return;
+    }
+
+    /**@type {Date} */
+    const date = game.releaseDate;
+
+
+    console.log(game.genre);
+    res.render("games/edit", {
+        form_title : `Modification du jeu ${game.title}`,
+        title : game.title,
+        desc : game.desc,
+        genreName : game.genre.name,
+        editorName : game.editor.name,
+        editors,
+        genres,
+        date: date.toISOString().split("T")[0],
+        submit_text : "Modifier",
+        action:`/games/${game.id}/edit`
+    })
+})
+
+//--------------------------------------------------------------------------------
 
 app.get("/genres/:id", async (req, res) => {
     const id = req.params.id;
@@ -199,4 +300,4 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);
-});
+})

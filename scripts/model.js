@@ -37,6 +37,14 @@ class CModel
 
     }
 
+    async GetEditorsAndGenres()
+    {
+        const editors = await this.prisma.editor.findMany();
+        const genres = await this.prisma.genre.findMany();
+
+        return {editors,genres};
+    }
+
 
 }
 
