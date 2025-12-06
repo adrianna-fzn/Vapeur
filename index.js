@@ -27,6 +27,29 @@ app.get("/genres", async (req, res) => {
     res.render("genres/index", { genres });
 })
 
+//--------------------------------------------------------------------------------
+app.get("/genres/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+        const genre = await prisma.genre.findUnique({
+            where: {
+                id: Number(id)
+            }, include: {
+                Game: true
+            }
+        });
+
+        res.render("genres/detail", {
+            genre,
+            games: genre.Game
+        });
+
+    } catch (err) {
+        res.status(404).redirect("/zx");
+    }
+
+})
+
 app.get("/", async (req, res) => {
     const games = await prisma.game.findMany({
         where: {

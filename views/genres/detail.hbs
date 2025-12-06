@@ -1,0 +1,15 @@
+<h1>{{genre.name}}</h1>
+
+
+{{#if games}}
+<ul>
+    {{#each games}}
+        <li>
+            {{title}}
+        </li>
+    {{/each}}
+</ul>
+{{else}}
+    <p>Il n'y à aucun jeu correspondant à ce genre</p>
+{{/if}}
+
