@@ -36,3 +36,5 @@ jobs:
       - name : trying to start
         run : |
           npm run start
+          sleep 5
+          kill -9 $!
