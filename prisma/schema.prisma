@@ -24,6 +24,7 @@ model Game {
   editor      Editor   @relation(fields: [editorId], references: [id])
   editorId    Int
   highlighted Boolean  @default(false)
+  filename    String?
 }
 
 //Table genres, passée en clé étrangère à la table jeu
