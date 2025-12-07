@@ -1,9 +1,10 @@
 <h1>Liste des genres</h1>
 <ul>
+
+<!--    Affiche pour chaque genre son nom et un lien vers sa page spécifique -->
     {{#each genres}}
         <li>
             <a href="/genres/{{id}}">{{name}}</a>
-            <!--  // on accède directement aux propriétés de l'objet courant-->
         </li>
     {{/each}}
 </ul>
