@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static('style'))
 app.use(express.static('uploads'))
+app.use(express.static("pageScript"));
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
 app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
 init(hbs);
@@ -36,7 +37,10 @@ app.get("/games/add", async (req, res) => {
 
     res.render(path.join("games","add"),{
         editors,
-        genres
+        genres,
+        styles : [
+            "gestionGame.css"
+        ]
     });
 })
 
@@ -70,14 +74,6 @@ async function getGameData(req)
 }
 
 app.post("/games", upload.single("file"), async (req, res) => {
-    // let {title, releaseDate, desc, genreId, editorId : editorName}  = req.body;
-    //
-    // genreId = +genreId;
-    // const editorId = await model.GetIDFromEditorName(editorName);
-    // if(editorId === -1)
-    // {
-    //     //FAUT AJOUTER UN EDITOR
-    // }
 
     const {title, releaseDate,desc, editorId, genreId} = await getGameData(req);
 
@@ -304,16 +300,18 @@ async function AddEditor(name)
 {
     try {
         /**
-         * @type {{
+         * @type {[{
          *     id : number,
          *     name : string
-         * }}
+         * }]}
          * */
         const editor = await prisma.editor.createManyAndReturn({
             data:[{ name },],
         });
 
-        return editor.id;
+        console.log("editor : ",editor)
+
+        return editor[0].id;
     } catch (err) {
         return false;
     }
