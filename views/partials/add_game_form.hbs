@@ -1,42 +1,66 @@
-<h1>{{form_title}}</h1>
 <form action="{{ default action "/games"}}" method="post" enctype="multipart/form-data">
+    <fieldset>
+        <legend>{{form_title}}</legend>
+        <section>
+            <div class="form_field">
+                <label for="title">Titre du jeu :</label>
+                <input required type="text" name="title" id="title" placeholder="Le titre de votre jeu" value="{{title}}">
+            </div>
 
-    <label for="title">Titre : </label>
-    <input required type="text" name="title" id="title" placeholder="Le titre de votre jeu" value="{{title}}">
+            <div class="form_field">
+                <label for="releaseDate">Date de sortie</label>
+                <input required type="Date" name="releaseDate" id="releaseDate" value="{{date}}">
+            </div>
 
-    <label for="releaseDate"></label>
-    <input required type="Date" name="releaseDate" id="releaseDate" value="{{date}}">
+            <div class="vertical_form_field">
+                <label for="desc">Description du jeu</label>
+                <textarea required name="desc" id="desc" placeholder="Une belle description pour votre jeu ?" rows="3" cols="20">{{desc}}</textarea>
+            </div>
 
-    <label for="desc"></label>
-    <textarea required name="desc" id="desc" placeholder="Une belle description pour votre jeu ?" rows="3" cols="20">{{desc}}</textarea>
+            <div class="form_field">
+                <label for="genreId">Genre du jeu :</label>
+                <select id="genreId" name="genreId">
+                    {{#each genres}}
+                        <option value="{{id}}"
+                            {{#if (areSame name ../genreName)  }}
+                                selected
+                            {{/if}}
+                        >
+                            {{name}}
+                        </option>
+                    {{/each}}
+                </select>
+            </div>
 
-    <input type="file" name="file" id="file" value="no-file"
-        {{#if file_required}}
-            required
-        {{/if}}
-    >
+            <div class="form_field">
+                <label for="editorId">Editeur du jeu :</label>
+                <input name="editorId"  id="editorId" list="editor-choice" required value="{{editorName}}" />
+                <datalist id="editor-choice" >
+                    {{#each editors}}
+                        <option>{{name}}</option>
+                    {{/each}}
+                </datalist>
+            </div>
 
-    {{log genreName}}
-    <label for="genreId">Genre du jeu</label>
-    <select id="genreId" name="genreId">
-        {{#each genres}}
-            <option value="{{id}}"
-                    {{#if (areSame name ../genreName)  }}
-                        selected
+            <div class="vertical_form_field">
+                <label for="file" id="file-drop">
+                    Cliquez ou drop pour ajouter un fichier
+
+                </label>
+                <input type="file" name="file" id="file" value="no-file"
+                    {{#if file_required}}
+                       required
                     {{/if}}
-            >
-                {{name}}
-            </option>
-        {{/each}}
-    </select>
+                       hidden accept="image/*">
+            </div>
 
-    <label for="editorId">Editeur du jeu</label>
-    <input name="editorId"  id="editorId" list="editor-choice" required value="{{editorName}}" />
-    <datalist id="editor-choice" >
-        {{#each editors}}
-            <option>{{name}}</option>
-        {{/each}}
-    </datalist>
+            <section id="preview-container">
 
-    <input type="submit" value="{{ default submit_text "Ajouter"}}">
+            </section>
+            <input type="submit" value="{{ default submit_text "Ajouter"}}">
+        </section>
+    </fieldset>
 </form>
+
+<script type="text/javascript" src="/dropFile.js">
+</script>
