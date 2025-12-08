@@ -2,11 +2,13 @@ const {Application} = require("express");
 const {PrismaClient} = require("@prisma/client");
 const fs = require("fs");
 const path = require("path");
+const {CModel} = require("./model.js");
 /**
  * @param {Application} app
  * @param {PrismaClient} prisma
+ * @param {CModel} model
  * */
-export default async function InitTest(app, prisma)
+async function InitTest(app, prisma, model)
 {
     /**
      * @param {string} message
@@ -15,8 +17,9 @@ export default async function InitTest(app, prisma)
         console.log(`[${message}]`);
     }
 
-    const config = fs.readFileSync(path.join(__dirname,"..","config.json")).toString();
-    const Json = JSON.parse(config);
+
+    // const config = fs.readFileSync(path.join(__dirname,"..","config.json")).toString();
+    // const Json = JSON.parse(config);
     app.get("/api/test/:mdp/createGame", async (req, res) => {
         // if(req.params.mdp !== Json["API_MDP"])
         // {
@@ -24,6 +27,7 @@ export default async function InitTest(app, prisma)
         //     return;
         // }
 
+        await model.EditorCreation();
         log("Création du jeu");
         const GamesCreated = await prisma.game.createManyAndReturn({
             data : [
@@ -31,7 +35,7 @@ export default async function InitTest(app, prisma)
                     title : "GTA VI",
                     releaseDate : new Date(),
                     desc : "No desc",
-                    genreId : 0,
+                    genreId : 1,
                     highlighted : false,
                 }
             ]
@@ -58,11 +62,12 @@ export default async function InitTest(app, prisma)
         //     return;
         // }
 
+        await model.EditorCreation();
         log("Création de l'editeur");
         const EditorsCreated = await prisma.editor.createManyAndReturn({
             data : [
                 {
-                    name : "Rockstar",
+                    name : "Unknown Editor",
                 }
             ]
         });
@@ -71,15 +76,19 @@ export default async function InitTest(app, prisma)
         //0n a crée un seul jeu alors on le prend
         const EditorCreated = EditorsCreated[0];
 
-        log("Suppression du jeu");
+        log("Suppression de l'editor");
         await prisma.editor.delete({
             where : {
                 id : EditorCreated.id
             }
         });
 
-        log("Le jeu a été supprimé");
+        log("L'editor a été supprimé");
 
         res.status(201).send("OK");
     })
+}
+
+module.exports = {
+    InitTest
 }

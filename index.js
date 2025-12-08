@@ -6,19 +6,19 @@ const fs = require("fs");
 const hbs = require("hbs");
 const multer = require("multer");
 
-const {CModel} = require("./scripts/model");
-const {init} = require("./scripts/config_hbs");
-const InitTest = require("./scripts/test");
+const {CModel} = require("./scripts/model.js");
+const {init} = require("./scripts/config_hbs.js");
+const {InitTest} = require("./scripts/test.js");
 
 const app = express();
 const prisma = new PrismaClient();
 
-InitTest(app,prisma);
+
 
 const PORT = 8080;
 
 const model = new CModel(prisma);
-
+InitTest(app,prisma,model);
 model.GenresCreation();
 
 app.use(bodyParser.urlencoded({ extended: true }));

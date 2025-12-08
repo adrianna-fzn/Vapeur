@@ -28,19 +28,22 @@ jobs:
         run : |
           npx prisma migrate deploy
 
-
       - name : Starting app
         run : |
           npm run start &
+          
           PID=$!
+          sleep 5
 
-      - name : Creation de film test
-        run : |
-          curl -X GET -d "http://localhost:8080/api/test/3630/createGame"
+  
 
-      - name : Create d'éditeur test
+      - name : Creation de jeu test
         run : |
-          curl -X GET -d "http://localhost:8080/api/test/3630/createEditor"
+          curl -v http://localhost:8080/api/test/3630/createGame
+
+      - name : Création d'éditeur test
+        run : |
+          curl http://localhost:8080/api/test/3630/createEditor
 
       - name : Stopping test
         run : |
