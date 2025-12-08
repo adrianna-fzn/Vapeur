@@ -21,8 +21,8 @@ model Game {
   releaseDate DateTime
   genre       Genre    @relation(fields: [genreId], references: [id])
   genreId     Int
-  editor      Editor   @relation(fields: [editorId], references: [id])
-  editorId    Int
+  editor      Editor?   @relation(fields: [editorId], references: [id])
+  editorId    Int?
   highlighted Boolean  @default(false)
   filename    String?
 }

@@ -5,6 +5,9 @@
         <li>
             <a href="/editors/{{id}}">{{name}}</a>
             <!--  // on accède directement aux propriétés de l'objet courant-->
+        <form action="/editors/{{id}}/delete" method="post">
+            <input type="submit" value="Supprimer">
+        </form>
         </li>
     {{/each}}
 </ul>

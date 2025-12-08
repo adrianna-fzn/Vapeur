@@ -146,6 +146,7 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
     res.redirect("/");
 })
 
+
 app.post("/games/:id/delete", async (req, res) => {
     try{
         await prisma.game.delete({
@@ -336,8 +337,9 @@ app.post("/games/:id/highlight", async (req, res) => {
     res.redirect("/games");
 })
 
-//Ajouter/creer un editeur
 
+
+//Ajouter/creer un editeur
 app.post("/editors", async (req, res) => {
     const { name } = req.body;
     if(AddEditor(name) !== false)
@@ -358,6 +360,11 @@ app.get("/editors", async (req, res) => {
     const editors = await prisma.editor.findMany();
     res.render("editors/index", { editors });
 })
+
+
+
+
+
 
 //Affiche l'editeur qui correspond à l'id
 app.get("/editors/:id", async (req, res) => {
@@ -382,6 +389,23 @@ app.get("/editors/:id", async (req, res) => {
         res.status(404).redirect("/zx");
     }
 })
+
+app.post("/editors/:id/delete", async (req, res) => {
+    try{
+        await prisma.editor.delete({
+            where:{
+                id : +req.params.id,
+            }
+        })
+        res.status(201).redirect("/editors");
+    }catch (error){
+        console.error(error);
+    res.status(400).send("Un jeu possède cet éditeur !");
+    }
+})
+
+
+
 
 
 app.use((req, res, next) => {
