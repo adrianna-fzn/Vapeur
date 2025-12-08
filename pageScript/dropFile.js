@@ -1,5 +1,8 @@
 (() => {
     const dropZone = document.querySelector("#file-drop");
+    const body = document.querySelector("body");
+    const dropImageSection = document.querySelector(".DragDropSection")
+    const dropImage = document.querySelector(".DragDropImg");
     if(!(dropZone instanceof  HTMLElement))
         return;
 
@@ -12,17 +15,26 @@
         e.preventDefault();
     }
 
-    dropZone.addEventListener("dragover", preventDefault);
-    dropZone.addEventListener("dragenter", preventDefault);
+    body.addEventListener("dragover", preventDefault);
+    body.addEventListener("dragenter", preventDefault);
+    dropImage.addEventListener("drop", preventDefault);
+    dropImageSection.addEventListener("drop", preventDefault);
 
-    dropZone.addEventListener("dragenter", (e) => {
+    body.addEventListener("dragenter", (e) => {
         e.preventDefault();
         dropZone.classList.toggle("drag-over");
+        dropImageSection.classList.add("active");
+        dropImageSection.classList.remove("disable");
     })
 
-    dropZone.addEventListener("dragleave", (e) => {
+    body.addEventListener("dragleave", (e) => {
         e.preventDefault();
-        dropZone.classList.toggle("drag-over");
+        if(e.target === dropImage)
+        {
+            dropZone.classList.toggle("drag-over");
+            dropImageSection.classList.remove("active");
+            dropImageSection.classList.add("disable");
+        }
     })
 
     /**
@@ -38,11 +50,12 @@
             dropZone.textContent = files[0].name;
         }
 
-        dropZone.classList.remove("drag-over");
+        dropImageSection.classList.add("disable");
+        dropImageSection.classList.remove("active");
         handleFile(files[0]);
     }
 
-    dropZone.addEventListener("drop", handleDrop);
+    body.addEventListener("drop", handleDrop);
 
     fileInput.addEventListener("change", (e) =>  {
         console.log(e)
@@ -51,6 +64,7 @@
          * */
         const filesList = e.currentTarget.files;
         dropZone.textContent = filesList.item(0).name;
+
 
         handleFile(filesList.item(0));
     })
