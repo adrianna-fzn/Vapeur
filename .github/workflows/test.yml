@@ -20,21 +20,32 @@ jobs:
         env:
           GITHUB_TOKEN : ${{secrets.PAT}}
 
-      - name: git CONFIG
-        run: |
-          git config --global user.name "sylverstone-action"
-          git config --global user.email "e@nomail.com" 
-
       - name : Installing Dependencies
         run : |
           npm i
+
+      - name : Installing CURL
+        run : |
+          sudo apt install curl
 
       - name : migrate prisma
         run : |
           npx prisma migrate deploy
 
-      - name : trying to start
+
+      - name : Starting app
         run : |
           npm run start &
-          sleep 5
-          kill -9 $!
+          PID=$!
+
+      - name : Creation de film test
+        run : |
+          curl -X GET -d "http://localhost:8080/api/test/3630/createGame"
+
+      - name : Create d'éditeur test
+        run : |
+          curl -X GET -d "http://localhost:8080/api/test/3630/createEditor"
+
+      - name : Stopping test
+        run : |
+          kill -9 $PID
