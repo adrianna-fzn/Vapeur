@@ -29,7 +29,11 @@ init(hbs);
 
 //route vers la liste de des genres
 app.get("/genres", async (req, res) => {
-    const genres = await prisma.genre.findMany();
+    const genres = await prisma.genre.findMany({
+        orderBy : {
+            name : "asc"
+        }
+    });
     res.render("genres/index", { genres });
 })
 
@@ -163,7 +167,11 @@ app.post("/games/:id/delete", async (req, res) => {
 })
 
 app.get("/games", async (req, res) => {
-    const games = await prisma.game.findMany();
+    const games = await prisma.game.findMany({
+        orderBy : {
+            title : "asc"
+        }
+    });
 
     res.render("games/list", {
         games,
@@ -247,7 +255,7 @@ app.get("/games/:id/edit", async (req, res) => {
         title : game.title,
         desc : game.desc,
         genreName : game.genre.name,
-        editorName : game.editor.name,
+        editorName : game.editor?.name ?? "Aucun éditeur",
         editors,
         genres,
         date: date.toISOString().split("T")[0],
@@ -361,7 +369,12 @@ app.get("/editors/add", async (req, res) => {
 })
 
 app.get("/editors", async (req, res) => {
-    const editors = await prisma.editor.findMany();
+    const editors = await prisma.editor.findMany({
+        orderBy : {
+            name : "asc"
+        }
+    });
+
     res.render("editors/index", { editors });
 })
 
