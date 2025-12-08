@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('style'))
 app.use(express.static('uploads'))
 app.use(express.static("pageScript"));
+app.use(express.static("public"));
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
 app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
 init(hbs);
@@ -175,7 +176,10 @@ app.get("/games", async (req, res) => {
 
 app.get("/games/:id", async (req, res) => {
     const id = +req.params.id;
-
+    if(!id)
+    {
+        res.redirect("/games");
+    }
     const game = await prisma.game.findFirst({
         where : {
             id
