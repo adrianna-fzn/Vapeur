@@ -14,16 +14,15 @@ jobs:
     steps:
       - uses : actions/checkout@v6
         with:
-          node-version : 20
           token: ${{ secrets.PAT }}
           fetch-depth: 0
         env:
           GITHUB_TOKEN : ${{secrets.PAT}}
 
-      - name: git CONFIG
-        run: |
-          git config --global user.name "sylverstone-action"
-          git config --global user.email "e@nomail.com" 
+      - name : Utilisation de NODEJS
+        uses : actions/setup-node@v6
+        with:
+          node-version : '20.x'
 
       - name : Installing Dependencies
         run : |
@@ -33,8 +32,21 @@ jobs:
         run : |
           npx prisma migrate deploy
 
-      - name : trying to start
+      - name : Starting app
         run : |
           npm run start &
+          
+          echo "PID=$!" >> $GITHUB_ENV
           sleep 5
-          kill -9 $!
+
+      - name : Creation de jeu test
+        run : |
+          curl -v http://localhost:8080/api/test/3630/createGame
+
+      - name : Création d'éditeur test
+        run : |
+          curl http://localhost:8080/api/test/3630/createEditor
+
+      - name : Stopping test
+        run : |
+          kill "$PID"

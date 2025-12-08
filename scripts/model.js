@@ -82,6 +82,25 @@ class CModel
         }
     }
 
+    async EditorCreation()
+    {
+        const editors = ["EA","ROCKSTAR"];
+
+        if(await this.prisma.genre.count() !== 0)
+            return;
+
+        await this.prisma.genre.createMany({
+
+            data : editors.map(editor => {
+                return {
+                    name: editor
+                };
+            })
+        });
+
+
+    }
+
 
 }
 
