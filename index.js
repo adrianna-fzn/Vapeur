@@ -15,6 +15,8 @@ const PORT = 8080;
 
 const model = new CModel(prisma);
 
+model.GenresCreation();
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static('style'))
