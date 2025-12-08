@@ -47,4 +47,4 @@ jobs:
 
       - name : Stopping test
         run : |
-          kill -9 $PID
+          kill "$PID"
