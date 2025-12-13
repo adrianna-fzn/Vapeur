@@ -368,8 +368,9 @@ app.post("/editors", async (req, res) => {
 })
 
 app.get("/editors/add", async (req, res) => {
-
-    res.render("editors/add");
+    res.render("editors/add", {
+        styles : ["gestionGame.css"]
+    });
 })
 
 app.get("/editors", async (req, res) => {
