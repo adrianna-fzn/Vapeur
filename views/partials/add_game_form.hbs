@@ -67,6 +67,8 @@
             <section id="preview-container">
                 {{#if filename}}
                     <img src="/uploads/{{filename}}" alt="preview image {{title}}" />
+                {{else}}
+                    <img src="/Images/gameImageDefault.jpeg" alt="image par défaut" />
                 {{/if}}
             </section>
             <input type="submit" value="{{ default submit_text "Ajouter"}}">

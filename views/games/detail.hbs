@@ -8,7 +8,11 @@
         </div>
     </legend>
 
-    <img src="/uploads/{{game.filename}}" alt="Icon - {{game.title}}" class="gameImage" />
+    {{#if game.filename}}
+        <img src="/uploads/{{game.filename}}" alt="Icon - {{game.title}}" class="gameImage" />
+    {{else}}
+        <img src="/Images/gameImageDefault.jpeg" alt="Icon - {{game.title}}" class="gameImage" />
+    {{/if}}
     <ul>
         <li><i>editeur :</i> <b class="boldList">
             <a class="link" href="/editors/{{game.editor.id}}">{{game.editor.name}}</a>
