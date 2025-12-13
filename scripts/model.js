@@ -84,6 +84,66 @@ class CModel
             })
         });
     }
+
+
+    /**
+     * Méthode permettant d'ajouter un editeur ainsi que ses jeux associés si il en a.
+     * @param {String} name
+     * @param {String[]} gamesIds
+     * @return {false | number}
+     * */
+    async AddEditor(name, gamesIds = [])
+    {
+
+        try {
+            /**
+             * @type {import("./scripts/type").editor_t | undefined}
+             * */
+            const editor = await this.prisma.editor.create({
+                data:{ name },
+            });
+
+            console.log("editor : ",editor)
+
+            if(gamesIds.length > 0)
+            {
+
+                const games = await this.getGames();
+
+                console.log(games);
+
+                if(!games)
+                    return false;
+
+                const filteredGames = games.filter(game => gamesIds.includes(game.id.toString()));
+                for(const game of filteredGames)
+                {
+                    await this.prisma.game.update({
+                        data : {
+                            editorId : editor.id
+                        },
+
+                        where : {
+                            id : game.id
+                        }
+                    })
+                }
+            }
+
+            return editor.id;
+        } catch (err) {
+            return false;
+        }
+    }
+
+    /**
+     * Méthode permettant de récupérer tous les jeux
+     * @returns {Promise<games_t>}
+     * */
+    async getGames(){
+        return this.prisma.game.findMany();
+    }
+
 }
 
 module.exports = {

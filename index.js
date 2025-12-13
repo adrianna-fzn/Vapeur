@@ -4,7 +4,6 @@ const { NextFunction, Request, Response } = require("express");
 const { PrismaClient } = require("@prisma/client");
 const bodyParser = require("body-parser");
 const path = require("path");
-const fs = require("fs");
 const hbs = require("hbs");
 const multer = require("multer");
 const {CModel} = require("./scripts/model.js");
@@ -39,12 +38,7 @@ const getUrl = () => {
 }
 
 
-/**
- * @returns {Promise<games_t>}
- * */
-const getGames = async () => {
-    return prisma.game.findMany();
-}
+
 
 //route vers la liste de des genres
 app.get("/genres", async (req, res) => {
@@ -75,7 +69,7 @@ app.get("/games/add", async (req, res) => {
         editors,
         genres,
         styles : [
-            "gestionGame.css"
+            "form.css"
         ]
     });
 })
@@ -103,7 +97,7 @@ async function checkEditorExist(req)
     let editorId = await model.GetIDFromEditorName(editorName);
     if(editorId === -1)
     {
-        editorId = await AddEditor(editorName);
+        editorId = await model.AddEditor(editorName);
         if(editorId === false)
             return {};
     }
@@ -142,7 +136,7 @@ app.get("/games/add", async (req, res) => {
         genres,
         pageTitle : "Créer un jeu",
         style : [
-            "gestionGame.css",
+            "form.css",
         ]
     });
 })
@@ -291,7 +285,7 @@ app.get("/games/:id/edit", async (req, res) => {
         submit_text : "Modifier",
         action:`/games/${game.id}/edit`,
         styles : [
-            "gestionGame.css"
+            "form.css"
         ]
     })
 })
@@ -350,54 +344,6 @@ app.get("/", async (req, res) => {
     });
 })
 
-/**
- * Fonction permettant d'ajouter un editeur ainsi que ses jeux associés si il en a.
- * @param {String} name
- * @param {String[]} gamesIds
- * @return {false | number}
- * */
-async function AddEditor(name, gamesIds = [])
-{
-    try {
-        /**
-         * @type {import("./scripts/type").editor_t | undefined}
-         * */
-        const editor = await prisma.editor.create({
-            data:{ name },
-        });
-
-        console.log("editor : ",editor)
-
-        if(gamesIds.length > 0)
-        {
-
-            const games = await getGames();
-
-            console.log(games);
-
-            if(!games)
-                return false;
-
-            const filteredGames = games.filter(game => gamesIds.includes(game.id.toString()));
-            for(const game of filteredGames)
-            {
-                await prisma.game.update({
-                    data : {
-                        editorId : editor.id
-                    },
-
-                    where : {
-                        id : game.id
-                    }
-                })
-            }
-        }
-
-        return editor.id;
-    } catch (err) {
-        return false;
-    }
-}
 
 app.post("/games/:id/highlight", async (req, res) => {
 
@@ -434,7 +380,7 @@ app.post("/editors", async (req, res) => {
 
     games = games === undefined ? [] : games;
 
-    if(AddEditor(name, toArray(games)) !== false)
+    if(model.AddEditor(name, toArray(games)) !== false)
     {
         res.status(201).redirect("/editors");
     }
@@ -445,11 +391,11 @@ app.post("/editors", async (req, res) => {
 
 app.get("/editors/add", async (req, res) => {
 
-    const games = await getGames();
+    const games = await model.getGames();
 
     res.render("editors/add", {
         pageTitle: "Ajouter une editeur",
-        styles : ["gestionGame.css"],
+        styles : ["form.css"],
         games
     });
 })
@@ -529,7 +475,7 @@ app.get("/editors/:id/edit", async (req, res) =>{
         });
 
 
-        const games = await getGames();
+        const games = await model.getGames();
 
         if(!games)
             return;
@@ -538,7 +484,7 @@ app.get("/editors/:id/edit", async (req, res) =>{
             .map(game => game.id);
         res.render("editors/edit", {
             editor,
-            styles : ["gestionGame.css"],
+            styles : ["form.css"],
             games,
             editor_name : editor.name,
             form_title : "Modification de " + editor.name,

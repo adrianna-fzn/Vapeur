@@ -3,6 +3,7 @@
     const body = document.querySelector("body");
     const dropImageSection = document.querySelector(".DragDropSection")
     const dropImage = document.querySelector(".DragDropImg");
+
     if(!(dropZone instanceof  HTMLElement))
         return;
 

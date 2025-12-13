@@ -38,6 +38,7 @@ function dateToFormat(date)
 }
 
 /**
+ * Fonction initialisant des éléments liés à Handlebars comme les partials, helpers
  * @param {Instance} hbs
  * */
 function init(hbs)
