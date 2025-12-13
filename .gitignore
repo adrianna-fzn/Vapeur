@@ -5,3 +5,4 @@ node_modules/
 .vscode/
 prisma/database.db
 config.json
+public/uploads/*
