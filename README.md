@@ -28,7 +28,7 @@ Vapeur est une application web dynamique ayant pour but de gérer une collection
 
 - ### Démarrer l'application
 
-``npm run stat``
+``npm run start``
 
 ## Arborescence
 
@@ -98,4 +98,4 @@ Vapeur/
 
 ## Crédits
 
-Développé par [Syvlio Pelage-Maxime](https://github.com/Sylverstone), [Evan Thonnerieux](https://github.com/TheRevanZz), [Clara Alves](https://github.com/AlvesClara22) et [Adrianna Fanzone](https://github.com/adrianna-fzn)
+Développé par [Sylvio Pelage-Maxime](https://github.com/Sylverstone), [Evan Thonnerieux](https://github.com/TheRevanZz), [Clara Alves](https://github.com/AlvesClara22) et [Adrianna Fanzone](https://github.com/adrianna-fzn)
