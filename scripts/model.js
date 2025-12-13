@@ -52,7 +52,6 @@ class CModel
         if(await this.prisma.genre.count() === 0)
         {
             await this.prisma.genre.createMany({
-
                  data : genres.map(genre => {
                      return {
                          name: genre

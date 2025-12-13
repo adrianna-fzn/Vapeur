@@ -13,9 +13,9 @@ const {InitTest} = require("./scripts/test.js");
 const app = express();
 const prisma = new PrismaClient();
 
+//Ne pas toucher
+const PORT = +(process.env.PORT || 8080);
 
-
-const PORT = 8080;
 
 const model = new CModel(prisma);
 InitTest(app,prisma,model);
@@ -31,6 +31,14 @@ app.set("view engine", "hbs"); // On définit le moteur de template que Express 
 app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
 init(hbs);
 
+const getUrl = () => {
+    if(process.env.PROD === "non")
+    {
+        return `${process.env.HOST}:${process.env.PORT}`;
+    }
+    return `${process.env.HOST}`;
+
+}
 //route vers la liste de des genres
 app.get("/genres", async (req, res) => {
     const genres = await prisma.genre.findMany({
@@ -97,7 +105,7 @@ app.post("/games", upload.single("file"), async (req, res) => {
             desc,
             genreId,
             editorId,
-            highlighted : true,
+            highlighted : false,
             filename : `${name}`
         }
     })
@@ -163,7 +171,7 @@ app.post("/games/:id/delete", async (req, res) => {
                 id: +req.params.id,
             }
         })
-        res.status(201).redirect("/games"); // On redirige vers la page des jeux
+        res.status(201).redirect("/"); // On redirige vers la page des jeux
     } catch (error) {
         console.error(error);
         res.status(400).json({ error: "game supression failed" });
@@ -172,17 +180,17 @@ app.post("/games/:id/delete", async (req, res) => {
 
 app.get("/games", async (req, res) => {
     const games = await prisma.game.findMany({
-        orderBy : {
-            title : "asc"
-        }
+        orderBy : [{
+            title : 'asc'
+        }]
     });
 
     res.render("games/list", {
         games,
-        title: "Accueil - Vapeur",
-        // styles : [{
-        //     href : "test.css"
-        // }],
+        title: "Liste des jeux - Vapeur",
+        styles : [
+            "gameList.css"
+        ]
     });
 })
 
@@ -299,15 +307,18 @@ app.get("/", async (req, res) => {
     const games = await prisma.game.findMany({
         where: {
             highlighted: true,
-        }
+        },
+        orderBy : [{
+            title : 'asc'
+        }]
     });
 
     res.render("index",{
         games,
-        title : "Accueil - Vapeur",
-        // styles : [{
-        //     href : "test.css"
-        // }],
+        title: "Accueil - Vapeur",
+        styles : [
+            "gameList.css"
+        ]
     });
 })
 
