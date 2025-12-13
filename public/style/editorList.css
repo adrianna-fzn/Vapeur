@@ -68,20 +68,6 @@ ul li a[href*="edit"] {
     cursor: pointer;
 }
 
-/* Supprimer */
-ul li input[type="submit"] {
-    background: #8b1e1e;
-    color: white;
-}
-
-/* Modifier */
 ul li a[href*="edit"] {
     background: #2b3b54;
-    color: white;
-}
-
-/* Hover */
-ul li input[type="submit"]:hover,
-ul li a[href*="edit"]:hover {
-    opacity: 0.85;
 }
