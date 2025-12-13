@@ -1,3 +1,4 @@
+
 const express = require("express");
 const { NextFunction, Request, Response } = require("express");
 const { PrismaClient } = require("@prisma/client");
@@ -6,7 +7,6 @@ const path = require("path");
 const fs = require("fs");
 const hbs = require("hbs");
 const multer = require("multer");
-
 const {CModel} = require("./scripts/model.js");
 const {init} = require("./scripts/config_hbs.js");
 const {InitTest} = require("./scripts/test.js");
@@ -38,6 +38,14 @@ const getUrl = () => {
 
 }
 
+
+/**
+ * @returns {Promise<games_t>}
+ * */
+const getGames = async () => {
+    return prisma.game.findMany();
+}
+
 //route vers la liste de des genres
 app.get("/genres", async (req, res) => {
     const genres = await prisma.genre.findMany({
@@ -51,24 +59,8 @@ app.get("/genres", async (req, res) => {
     });
 })
 
-/**
- * @typedef {{
- *     id : number,
- *     title : string,
- *     desc : string,
- *     releaseDate : Date,
- *     genere : any,
- *     genreId? : number,
- *     editor : any,
- *     editorId : number,
- *     highlighted : boolean,
- *     filename? : string
- * }} game_t
- * */
 
-/**
- * @typedef {game_t[] | undefined} games_t
- * */
+
 
 
 app.get("/games/add", async (req, res) => {
@@ -200,6 +192,8 @@ app.post("/games/:id/delete", async (req, res) => {
 })
 
 app.get("/games", async (req, res) => {
+
+    /**@type {import("./scripts/type").games_t}*/
     const games = await prisma.game.findMany({
         orderBy : [{
             title : 'asc'
@@ -217,11 +211,14 @@ app.get("/games", async (req, res) => {
 })
 
 app.get("/games/:id", async (req, res) => {
+
     const id = +req.params.id;
     if(!id)
     {
         res.redirect("/games");
     }
+
+    /**@type {import("./scripts/type").games_t}*/
     const game = await prisma.game.findFirst({
         where : {
             id
@@ -252,9 +249,7 @@ app.get("/games/:id", async (req, res) => {
 app.get("/games/:id/edit", async (req, res) => {
     const id = +req.params.id;
 
-    /**
-     * @type {games_t}
-     * */
+    /**@type {import("./scripts/type").games_t}*/
     const game = await prisma.game.findFirst({
         where : {
             id
@@ -303,6 +298,8 @@ app.get("/games/:id/edit", async (req, res) => {
 app.get("/genres/:id", async (req, res) => {
     const id = req.params.id;
     try {
+
+        /**@type {import("./scripts/type").genre_t | undefined}*/
         const genre = await prisma.genre.findUnique({
             where: {
                 id: Number(id)
@@ -326,6 +323,7 @@ app.get("/genres/:id", async (req, res) => {
 //jeux mis en avant
 app.get("/", async (req, res) => {
 
+    /**@type {import("./scripts/type").games_t}*/
     const games = await prisma.game.findMany({
         where: {
             highlighted: true,
@@ -355,10 +353,7 @@ async function AddEditor(name, gamesIds = [])
 {
     try {
         /**
-         * @type {{
-         *     id : number,
-         *     name : string
-         * } | undefined}
+         * @type {import("./scripts/type").editor_t | undefined}
          * */
         const editor = await prisma.editor.create({
             data:{ name },
@@ -368,10 +363,8 @@ async function AddEditor(name, gamesIds = [])
 
         if(gamesIds.length > 0)
         {
-            /**
-             * @type {games_t}
-             * */
-            const games = await prisma.game.findMany();
+
+            const games = await getGames();
 
             console.log(games);
 
@@ -401,7 +394,7 @@ async function AddEditor(name, gamesIds = [])
 
 app.post("/games/:id/highlight", async (req, res) => {
 
-    /** @type {game_t | undefined} */
+    /** @type {import("./scripts/type").game_t | undefined} */
     const game = await prisma.game.findFirst({
         where: {
             id: +req.params.id,
@@ -444,10 +437,8 @@ app.post("/editors", async (req, res) => {
 })
 
 app.get("/editors/add", async (req, res) => {
-    /**
-     * @type {games_t}
-     * */
-    const games = await prisma.game.findMany();
+
+    const games = await getGames();
 
     res.render("editors/add", {
         pageTitle: "Ajouter une editeur",
@@ -457,6 +448,10 @@ app.get("/editors/add", async (req, res) => {
 })
 
 app.get("/editors", async (req, res) => {
+
+    /**
+     * @type {import('./scripts/type').editors_t}
+     * */
     const editors = await prisma.editor.findMany({
         orderBy : {
             name : "asc"
@@ -474,6 +469,9 @@ app.get("/editors", async (req, res) => {
 app.get("/editors/:id", async (req, res) => {
     try{
         console.log(req.params.id);
+        /**
+         * @type {import('./scripts/type').editors_t}
+         * */
         const editor = await prisma.editor.findFirst({
             where: {
                 id: Number(req.params.id),
@@ -510,13 +508,31 @@ app.post("/editors/:id/delete", async (req, res) => {
 
 app.get("/editors/:id/edit", async (req, res) =>{
     try{
+        /**
+         * @type {import('./scripts/type').editor_t}
+         * */
         const editor = await prisma.editor.findFirst({
             where : {
                 id : +req.params.id,
             }
         });
 
-        res.render("editors/edit", { editor });
+
+        const games = await getGames();
+
+        if(!games)
+            return;
+
+        const ids = games.filter(game => game.editorId === editor.id)
+            .map(game => game.id);
+        res.render("editors/edit", {
+            editor,
+            styles : ["gestionGame.css"],
+            games,
+            editor_name : editor.name,
+            form_title : "Modification de " + editor.name,
+            ids
+        });
     } catch (error) {
         console.error(error);
         res.status(400).send("Un problème !");

@@ -13,7 +13,7 @@ class CModel
     }
 
     /**
-     * Fonction permettant d'avoir l'ID d'un editor en fonction de son nom
+     * Méthode permettant d'avoir l'ID d'un editor en fonction de son nom
      * @param {string} editorName
      * @return {Promise<number>}
      * */
@@ -37,9 +37,16 @@ class CModel
 
     }
 
+    /**
+     * Méthode permettant de récupérer les editeurs et les genres
+     * @returns {Promise<{editors : import('./type').editors_t,
+     *                   genres : import('./type').genres_t}>}
+     * */
     async GetEditorsAndGenres()
     {
+        /**@type {import('./type').editors_t}*/
         const editors = await this.prisma.editor.findMany();
+        /**@type {import('./type').genres_t}*/
         const genres = await this.prisma.genre.findMany();
 
         return {editors,genres};
