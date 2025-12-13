@@ -23,9 +23,6 @@ model.GenresCreation();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static('style'))
-app.use(express.static('uploads'))
-app.use(express.static("pageScript"));
 app.use(express.static("public"));
 app.set("view engine", "hbs"); // On définit le moteur de template que Express va utiliser
 app.set("views", path.join(__dirname, "views")); // On définit le dossier des vues (dans lequel se trouvent les fichiers .hbs)
@@ -47,7 +44,10 @@ app.get("/genres", async (req, res) => {
             name : "asc"
         }
     });
-    res.render("genres/index", { genres });
+    res.render("genres/index", {
+        genres,
+        pageTitle: "Liste des genres",
+    });
 })
 
 /**
@@ -75,6 +75,7 @@ app.get("/games/add", async (req, res) => {
     const genres = await prisma.genre.findMany();
 
     res.render(path.join("games","add"),{
+        pageTitle : "Ajouter un jeu",
         editors,
         genres,
         styles : [
@@ -86,7 +87,7 @@ app.get("/games/add", async (req, res) => {
 
 // Configuration du stockage des fichiers
 const storage = multer.diskStorage({
-    destination: 'uploads/',
+    destination: 'public/uploads/',
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
@@ -139,7 +140,11 @@ app.get("/games/add", async (req, res) => {
     const {editors,genres} = await model.GetEditorsAndGenres();
     res.render(path.join("games","add"),{
         editors,
-        genres
+        genres,
+        pageTitle : "Créer un jeu",
+        style : [
+            "gestionGame.css",
+        ]
     });
 })
 
@@ -163,7 +168,7 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
             genreId,
             editorId,
             highlighted : highlighted,
-            filename : `${name}`
+            filename : `${name}`.replace("/uploads/","")
         },
         where : {
             id : id
@@ -197,7 +202,7 @@ app.get("/games", async (req, res) => {
 
     res.render("games/list", {
         games,
-        title: "Liste des jeux - Vapeur",
+        pageTitle: "Liste des jeux - Vapeur",
         styles : [
             "gameList.css",
             "editButtons.css"
@@ -231,7 +236,7 @@ app.get("/games/:id", async (req, res) => {
 
     res.render("games/detail", {
         game,
-        title: game.title + " détails - Vapeur",
+        pageTitle: "Détails de " + game.title + " - Vapeur",
         styles : [
             "gameDetails.css",
             "editButtons.css"
@@ -268,6 +273,7 @@ app.get("/games/:id/edit", async (req, res) => {
 
     console.log(game.genre);
     res.render("games/edit", {
+        pageTitle : "Modifier le jeu "+ game.title,
         form_title : `Modification du jeu ${game.title}`,
         title : game.title,
         desc : game.desc,
@@ -279,7 +285,10 @@ app.get("/games/:id/edit", async (req, res) => {
         filename : game.filename,
         date: date.toISOString().split("T")[0],
         submit_text : "Modifier",
-        action:`/games/${game.id}/edit`
+        action:`/games/${game.id}/edit`,
+        styles : [
+            "gestionGame.css"
+        ]
     })
 })
 
@@ -297,6 +306,7 @@ app.get("/genres/:id", async (req, res) => {
         });
 
         res.render("genres/detail", {
+            pageTitle : "Genre : " + genre.name,
             genre,
             games: genre.Game
         });
@@ -322,7 +332,7 @@ app.get("/", async (req, res) => {
 
     res.render("index",{
         games,
-        title: "Accueil - Vapeur",
+        pageTitle: "Accueil - Vapeur",
         styles : [
             "gameList.css",
             "editButtons.css"
@@ -435,6 +445,7 @@ app.get("/editors/add", async (req, res) => {
     const games = await prisma.game.findMany();
 
     res.render("editors/add", {
+        pageTitle: "Ajouter une editeur",
         styles : ["gestionGame.css"],
         games
     });
@@ -447,7 +458,10 @@ app.get("/editors", async (req, res) => {
         }
     });
 
-    res.render("editors/index", { editors });
+    res.render("editors/index", {
+        editors,
+        pageTitle: "Liste des editeurs",
+    });
 })
 
 
@@ -471,7 +485,7 @@ app.get("/editors/:id", async (req, res) => {
         res.render("editors/detail", {
             editeur: editor,
             games: editor.Game,
-            title: `Editeur : ${editor.name}`
+            pageTitle: `Editeur : ${editor.name}`
         });
 
     } catch (err){//Gère l'erreur quand l'id n'existe pas
