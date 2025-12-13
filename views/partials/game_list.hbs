@@ -1,0 +1,31 @@
+<ul>
+    {{#each games}}
+        <li>
+            <fieldset>
+                <legend>
+                    <a href="/games/{{id}}"><b>{{title}}</b></a>
+                    <i>({{Year releaseDate}})</i>
+                </legend>
+                <a href="/games/{{id}}"><img src="{{filename}}" class="gameImage"></a>
+                <div class="butons">
+                    <button type="submit" class="button" onclick="DeleteGame({{id}})"><img src="/deleteButton.png"></button>
+                    <form action="/games/{{id}}/edit" method="get">
+    <!--                    <input type="submit" value="Modifier">-->
+                        <button type="submit" class="button"><img src="/editButton.png"></button>
+                    </form>
+                </div>
+                <div class="checkbox">
+                    <label>Mettre en avant : </label>
+                    {{#if highlighted}}
+                        <input type="checkbox" onclick="CheckReload({{id}})" checked value="Mettre en avant">
+                    {{else}}
+                        <input type="checkbox" onclick="CheckReload({{id}})" value="Mettre en avant">
+                    {{/if}}
+                </div>
+            </fieldset>
+        </li>
+    {{/each}}
+</ul>
+
+<script src="buttons.js" type="text/javascript">
+</script>
