@@ -3,12 +3,17 @@
 <ul>
     {{#each editors}}
         <li>
-            <a href="/editors/{{id}}">{{name}}</a>
+            <a href="/editors/{{id}}" class="link">{{name}}</a>
             <!--  // on accède directement aux propriétés de l'objet courant-->
-        <form action="/editors/{{id}}/delete" method="post">
-            <input type="submit" value="Supprimer">
-        </form>
-        <a href="/editors/{{id}}/edit">Modifier</a>
+            <div class="butons">
+                <button type="submit" class="button" onclick="DeleteEditor({{id}})"><img src="/Images/deleteButton.png"></button>
+                <form action="/editors/{{id}}/edit" method="get">
+                    <button type="submit" class="button"><img src="/Images/editButton.png"></button>
+                </form>
+            </div>
         </li>
     {{/each}}
 </ul>
+
+<script src="/scripts/buttons.js" type="text/javascript">
+    </script
