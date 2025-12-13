@@ -199,7 +199,8 @@ app.get("/games", async (req, res) => {
         games,
         title: "Liste des jeux - Vapeur",
         styles : [
-            "gameList.css"
+            "gameList.css",
+            "editButtons.css"
         ]
     });
 })
@@ -228,7 +229,13 @@ app.get("/games/:id", async (req, res) => {
         return;
     }
 
-    res.render("games/detail", { game });
+    res.render("games/detail", {
+        game,
+        title: game.title + " détails - Vapeur",
+        styles : [
+            "gameDetails.css",
+            "editButtons.css"
+        ] });
 })
 
 app.get("/games/:id/edit", async (req, res) => {
@@ -317,7 +324,8 @@ app.get("/", async (req, res) => {
         games,
         title: "Accueil - Vapeur",
         styles : [
-            "gameList.css"
+            "gameList.css",
+            "editButtons.css"
         ]
     });
 })

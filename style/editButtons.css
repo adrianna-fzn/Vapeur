@@ -1,0 +1,62 @@
+.butons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.butons form {
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button img {
+    display: block;
+    width: 24px;
+    height: 24px;
+}
+
+
+.button {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.button img {
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+}
+
+.button:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+}
+
+.button:active {
+    transform: scale(0.95);
+}
+
+.button:focus-visible {
+    outline: 2px solid #4a90e2;
+    border-radius: 0.5rem;
+}
