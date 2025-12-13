@@ -20,3 +20,10 @@ const DeleteGame = async (id) => {
         window.location.href = "/";
     }
 }
+
+const DeleteEditor = async (id) => {
+    await fetch("/editors/"+ id +"/delete", {
+        method: "post",
+    })
+    window.location.reload();
+}

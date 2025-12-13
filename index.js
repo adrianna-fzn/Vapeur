@@ -101,7 +101,7 @@ async function checkEditorExist(req)
 
     genreId = +genreId;
     let editorId = await model.GetIDFromEditorName(editorName);
-    if(editorId === -1)
+    if(editorId === -1 && editorName!=="")
     {
         editorId = await AddEditor(editorName);
         if(editorId === false)
@@ -161,20 +161,35 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
     highlighted = highlighted === "oui";
     const name = req.file ? req.file.filename : filename;
 
-    await prisma.game.update({
-        data : {
-            title,
-            releaseDate : new Date(releaseDate),
-            desc,
-            genreId,
-            editorId,
-            highlighted : highlighted,
-            filename : `${name}`.replace("/uploads/","")
-        },
-        where : {
-            id : id
-        }
-    })
+    if(editorId !==-1)
+        await prisma.game.update({
+            data : {
+                title,
+                releaseDate : new Date(releaseDate),
+                desc,
+                genreId,
+                editorId,
+                highlighted : highlighted,
+                filename : `${name}`.replace("/uploads/","")
+            },
+            where : {
+                id : id
+            }
+        })
+    else
+        await prisma.game.update({
+            data : {
+                title,
+                releaseDate : new Date(releaseDate),
+                desc,
+                genreId,
+                highlighted : highlighted,
+                filename : `${name}`.replace("/uploads/","")
+            },
+            where : {
+                id : id
+            }
+        })
 
     res.redirect("/");
 })
@@ -275,14 +290,13 @@ app.get("/games/:id/edit", async (req, res) => {
     const date = game.releaseDate;
 
 
-    console.log(game.genre);
     res.render("games/edit", {
         pageTitle : "Modifier le jeu "+ game.title,
         form_title : `Modification du jeu ${game.title}`,
         title : game.title,
         desc : game.desc,
         genreName : game.genre.name,
-        editorName : game.editor?.name ?? "Aucun éditeur",
+        editorName : game.editor?.name,
         editors,
         genres,
         highlighted : game.highlighted ? "oui" : "non",
@@ -468,6 +482,10 @@ app.get("/editors", async (req, res) => {
     res.render("editors/index", {
         editors,
         pageTitle: "Liste des editeurs",
+        styles : [
+            "editorList.css",
+            "editButtons.css"
+        ]
     });
 })
 
