@@ -24,8 +24,8 @@ async function InitTest(app, prisma, model)
 
         await model.EditorCreation();
         log("Création du jeu");
-        const GamesCreated = await prisma.game.createManyAndReturn({
-            data : [
+        const GameCreated = await prisma.game.create({
+            data :
                 {
                     title : "GTA VI",
                     releaseDate : new Date(),
@@ -33,11 +33,10 @@ async function InitTest(app, prisma, model)
                     genreId : 1,
                     highlighted : false,
                 }
-            ]
+
         });
         log("Le jeu à été crée");
         //0n a crée un seul jeu alors on le prend
-        const GameCreated = GamesCreated[0];
 
         log("Suppression du jeu");
         await prisma.game.delete({
@@ -59,17 +58,16 @@ async function InitTest(app, prisma, model)
 
         await model.EditorCreation();
         log("Création de l'editeur");
-        const EditorsCreated = await prisma.editor.createManyAndReturn({
-            data : [
+        const EditorCreated = await prisma.editor.create({
+            data :
                 {
                     name : "Unknown Editor",
                 }
-            ]
+
         });
 
         log("L'editeur à été crée");
         //0n a crée un seul jeu alors on le prend
-        const EditorCreated = EditorsCreated[0];
 
         log("Suppression de l'editor");
         await prisma.editor.delete({

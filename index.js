@@ -1,4 +1,5 @@
 const express = require("express");
+const { NextFunction, Request, Response } = require("express");
 const { PrismaClient } = require("@prisma/client");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -349,21 +350,19 @@ async function AddEditor(name, gamesIds = [])
 {
     try {
         /**
-         * @type {[{
+         * @type {{
          *     id : number,
          *     name : string
-         * }]}
+         * } | undefined}
          * */
-        const editors = await prisma.editor.createManyAndReturn({
-            data:[{ name },],
+        const editor = await prisma.editor.create({
+            data:{ name },
         });
 
-        const editor = editors[0];
         console.log("editor : ",editor)
 
         if(gamesIds.length > 0)
         {
-            const iGamesIds = gamesIds.map(g => +g);
             /**
              * @type {games_t}
              * */
@@ -396,6 +395,8 @@ async function AddEditor(name, gamesIds = [])
 }
 
 app.post("/games/:id/highlight", async (req, res) => {
+
+    /** @type {game_t | undefined} */
     const game = await prisma.game.findFirst({
         where: {
             id: +req.params.id,
@@ -414,6 +415,7 @@ app.post("/games/:id/highlight", async (req, res) => {
 })
 
 /**
+ * Fonction renvoyant un élément dans un tableau, ou l'élément lui même si c'est un tableau
  * @template T
  * @param {T | T[]} elt
  * @return T[]
@@ -463,10 +465,6 @@ app.get("/editors", async (req, res) => {
 })
 
 
-
-
-
-
 //Affiche l'editeur qui correspond à l'id
 app.get("/editors/:id", async (req, res) => {
     try{
@@ -481,7 +479,7 @@ app.get("/editors/:id", async (req, res) => {
         });
 
         res.render("editors/detail", {
-            editeur: editor,
+            editor: editor,
             games: editor.Game,
             pageTitle: `Editeur : ${editor.name}`
         });
@@ -501,14 +499,9 @@ app.post("/editors/:id/delete", async (req, res) => {
         res.status(201).redirect("/editors");
     }catch (error){
         console.error(error);
-    res.status(400).send("Un jeu possède cet éditeur !");
+        res.status(400).send("Un jeu possède cet éditeur !");
     }
 })
-
-
-
-
-
 
 app.get("/editors/:id/edit", async (req, res) =>{
     try{
@@ -544,27 +537,25 @@ app.post("/editors/:id/edit", async (req, res) =>{
     }
 })
 
-
-
-
-
-
-
-
-
-
-
-
 app.use((req, res, next) => {
     res.status(404).render("404", {
         message : "La page que vous cherchez n'existe pas !"
     });
 })
 
-app.use((err, req, res, next) => {
-    console.error(err);
-    res.status(500).send("Quelque chose s'est mal passé !");
-})
+/**
+ * Fonction utilisé pour les erreurs d'express
+ * @param {Error} err
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ * */
+const errorHandler = (err, req, res, next) => {
+    console.log(err.stack);
+    res.render("505");
+}
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);
