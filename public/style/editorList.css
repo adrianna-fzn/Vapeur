@@ -1,0 +1,87 @@
+.link{
+    text-decoration: underline;
+}
+
+.link:hover{
+    color: #89b8ff;
+}
+
+body{
+    text-align: center;
+}
+
+h1{
+    padding-top: 1rem;
+}
+
+ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 2rem auto;
+    max-width: 1000px;
+}
+
+ul li {
+    background: #18212e;
+    border-radius: 1rem;
+    padding: 1.2rem;
+    box-shadow: #1b242e 0px 0px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+ul li:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0px 1px #58759f);
+}
+
+/* Nom de l'éditeur */
+ul li > a:first-child {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+/* Zone boutons */
+ul li form,
+ul li a[href*="edit"] {
+    width: 100%;
+}
+
+/* Boutons */
+ul li input[type="submit"],
+ul li a[href*="edit"] {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Supprimer */
+ul li input[type="submit"] {
+    background: #8b1e1e;
+    color: white;
+}
+
+/* Modifier */
+ul li a[href*="edit"] {
+    background: #2b3b54;
+    color: white;
+}
+
+/* Hover */
+ul li input[type="submit"]:hover,
+ul li a[href*="edit"]:hover {
+    opacity: 0.85;
+}

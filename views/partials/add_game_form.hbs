@@ -44,7 +44,13 @@
 
             <div class="form_field">
                 <label for="editorId">Editeur du jeu :</label>
-                <input name="editorId"  id="editorId" list="editor-choice" required value="{{editorName}}" />
+                <input name="editorId"  id="editorId" list="editor-choice"
+                       {{#if editorName}}
+                            value="{{editorName}}"
+                       {{else}}
+                           placeholder="Aucun éditeur"
+                       {{/if}}
+                />
                 <datalist id="editor-choice" >
                     {{#each editors}}
                         <option>{{name}}</option>
