@@ -39,6 +39,7 @@ const getUrl = () => {
     return `${process.env.HOST}`;
 
 }
+
 //route vers la liste de des genres
 app.get("/genres", async (req, res) => {
     const genres = await prisma.genre.findMany({
@@ -48,6 +49,25 @@ app.get("/genres", async (req, res) => {
     });
     res.render("genres/index", { genres });
 })
+
+/**
+ * @typedef {{
+ *     id : number,
+ *     title : string,
+ *     desc : string,
+ *     releaseDate : Date,
+ *     genere : any,
+ *     genreId? : number,
+ *     editor : any,
+ *     editorId : number,
+ *     highlighted : boolean,
+ *     filename? : string
+ * }} game_t
+ * */
+
+/**
+ * @typedef {game_t[] | undefined} games_t
+ * */
 
 
 app.get("/games/add", async (req, res) => {
@@ -75,9 +95,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 /**
+ *  Ajoute un editeur à la base de données si il n'existe pas.
  * @param {Express.Request} req
  * */
-async function getGameData(req)
+async function checkEditorExist(req)
 {
     let {title, releaseDate, desc, genreId, editorId : editorName}  = req.body;
 
@@ -94,7 +115,7 @@ async function getGameData(req)
 
 app.post("/games", upload.single("file"), async (req, res) => {
 
-    const {title, releaseDate,desc, editorId, genreId} = await getGameData(req);
+    const {title, releaseDate,desc, editorId, genreId} = await checkEditorExist(req);
 
     const name = req.file.filename;
 
@@ -124,25 +145,15 @@ app.get("/games/add", async (req, res) => {
 
 app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
 
-    const game = await prisma.game.findFirst({
-        where: {
-            id: +req.params.id,
-        }
-    })
+    const id = +req.params.id;
+    const {title, releaseDate,desc, editorId, genreId} = await checkEditorExist(req);
 
-    // let {title, releaseDate, desc, genreId, editorId : editorName}  = req.body;
-    //
-    // genreId = +genreId;
-    // let editorId = await model.GetIDFromEditorName(editorName);
-    // if(editorId === -1)
-    // {
-    //     editorId = await AddEditor(editorName);
-    //     if(editorId === false)
-    //         return;
-    // }
-    const {title, releaseDate,desc, editorId, genreId} = await getGameData(req);
+    //On récupère les champs highlighted et filename dans le body.
+    //Ces 2 champs ne sont pas présents dans l'ajout normal alors on peut pas récupérer depuis checkEditorExist.
+    let { highlighted, filename } = req.body;
 
-    const name = req.file ? req.file.filename : game.filename;
+    highlighted = highlighted === "oui";
+    const name = req.file ? req.file.filename : filename;
 
     await prisma.game.update({
         data : {
@@ -151,12 +162,11 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
             desc,
             genreId,
             editorId,
-            highlighted : game.highlighted,
+            highlighted : highlighted,
             filename : `${name}`
         },
-
         where : {
-            id : game.id
+            id : id
         }
     })
 
@@ -225,18 +235,7 @@ app.get("/games/:id/edit", async (req, res) => {
     const id = +req.params.id;
 
     /**
-     * @type {{
-     *     id : number,
-     *     title : string,
-     *     desc : string,
-     *     releaseDate : Date,
-     *     genre : { name : string},
-     *     genreId : number,
-     *     editor : {name : string},
-     *     editorId : string,
-     *     highlighted : boolean,
-     *     filename : string
-     * }}
+     * @type {games_t}
      * */
     const game = await prisma.game.findFirst({
         where : {
@@ -247,7 +246,6 @@ app.get("/games/:id/edit", async (req, res) => {
             genre : true
         }
     });
-
 
     const {editors,genres} = await model.GetEditorsAndGenres();
 
@@ -270,6 +268,8 @@ app.get("/games/:id/edit", async (req, res) => {
         editorName : game.editor?.name ?? "Aucun éditeur",
         editors,
         genres,
+        highlighted : game.highlighted ? "oui" : "non",
+        filename : game.filename,
         date: date.toISOString().split("T")[0],
         submit_text : "Modifier",
         action:`/games/${game.id}/edit`
@@ -323,10 +323,12 @@ app.get("/", async (req, res) => {
 })
 
 /**
+ * Fonction permettant d'ajouter un editeur ainsi que ses jeux associés si il en a.
  * @param {String} name
- * @return {boolean | number}
+ * @param {String[]} gamesIds
+ * @return {false | number}
  * */
-async function AddEditor(name)
+async function AddEditor(name, gamesIds = [])
 {
     try {
         /**
@@ -335,13 +337,42 @@ async function AddEditor(name)
          *     name : string
          * }]}
          * */
-        const editor = await prisma.editor.createManyAndReturn({
+        const editors = await prisma.editor.createManyAndReturn({
             data:[{ name },],
         });
 
+        const editor = editors[0];
         console.log("editor : ",editor)
 
-        return editor[0].id;
+        if(gamesIds.length > 0)
+        {
+            const iGamesIds = gamesIds.map(g => +g);
+            /**
+             * @type {games_t}
+             * */
+            const games = await prisma.game.findMany();
+
+            console.log(games);
+
+            if(!games)
+                return false;
+
+            const filteredGames = games.filter(game => gamesIds.includes(game.id.toString()));
+            for(const game of filteredGames)
+            {
+                await prisma.game.update({
+                    data : {
+                        editorId : editor.id
+                    },
+
+                    where : {
+                        id : game.id
+                    }
+                })
+            }
+        }
+
+        return editor.id;
     } catch (err) {
         return false;
     }
@@ -353,6 +384,7 @@ app.post("/games/:id/highlight", async (req, res) => {
             id: +req.params.id,
         }
     })
+
     await prisma.game.update({
         where: {
             id: +req.params.id,
@@ -364,12 +396,22 @@ app.post("/games/:id/highlight", async (req, res) => {
     res.redirect("/games");
 })
 
-
+/**
+ * @template T
+ * @param {T | T[]} elt
+ * @return T[]
+ * */
+const toArray = (elt) => {
+    return Array.isArray(elt) ? elt : [elt]
+}
 
 //Ajouter/creer un editeur
 app.post("/editors", async (req, res) => {
-    const { name } = req.body;
-    if(AddEditor(name) !== false)
+    let { name, games } = req.body;
+
+    games = games === undefined ? [] : games;
+
+    if(AddEditor(name, toArray(games)) !== false)
     {
         res.status(201).redirect("/editors");
     }
@@ -379,8 +421,14 @@ app.post("/editors", async (req, res) => {
 })
 
 app.get("/editors/add", async (req, res) => {
+    /**
+     * @type {games_t}
+     * */
+    const games = await prisma.game.findMany();
+
     res.render("editors/add", {
-        styles : ["gestionGame.css"]
+        styles : ["gestionGame.css"],
+        games
     });
 })
 

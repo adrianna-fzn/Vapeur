@@ -3,6 +3,12 @@
     <img class="DragDropImg" src="/Images/DRAG_AND_DROP.png" loading="lazy" alt="Image drag & drop"/>
 </section>
 <form action="{{ default action "/games"}}" method="post" enctype="multipart/form-data">
+    {{#if highlighted}}
+        <input hidden name="highlighted" value="{{highlighted}}" type="text"/>
+    {{/if}}
+    {{#if filename}}
+        <input hidden name="filename" value="{{filename}}" type="text"/>
+    {{/if}}
     <fieldset>
         <legend>{{form_title}}</legend>
         <section>
