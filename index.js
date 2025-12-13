@@ -9,6 +9,7 @@ const multer = require("multer");
 const {CModel} = require("./scripts/model.js");
 const {init} = require("./scripts/config_hbs.js");
 const {InitTest} = require("./scripts/test.js");
+const fs = require("fs");
 
 const app = express();
 const prisma = new PrismaClient();
@@ -37,9 +38,6 @@ const getUrl = () => {
 
 }
 
-
-
-
 //route vers la liste de des genres
 app.get("/genres", async (req, res) => {
     const genres = await prisma.genre.findMany({
@@ -55,9 +53,6 @@ app.get("/genres", async (req, res) => {
         ]
     });
 })
-
-
-
 
 
 app.get("/games/add", async (req, res) => {
@@ -152,8 +147,20 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
     if (filename === undefined)
         filename = "";
 
+    filename = filename.replace("uploads","");
     highlighted = highlighted === "oui";
     const name = req.file ? req.file.filename : filename;
+
+    //Supprimer l'ancienne image
+    try{
+        console.log(filename);
+        if(filename)
+            fs.rmSync(path.join(__dirname,"public","uploads",filename));
+    }
+    catch (err)
+    {
+        console.error(err);
+    }
 
     if(editorId !==-1)
         await prisma.game.update({
@@ -191,6 +198,26 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
 
 app.post("/games/:id/delete", async (req, res) => {
     try{
+
+        const id = +req.params.id;
+
+        /**@type {import("./scripts/type").game_t | undefined}*/
+        const game = await prisma.game.findFirst({
+            where: {
+                id: id
+            }
+        });
+
+        try{
+            console.log(game);
+            if(game.filename)
+                fs.rmSync(path.join(__dirname,"public","uploads",game.filename));
+        }
+        catch (err)
+        {
+            console.error(err);
+        }
+
         await prisma.game.delete({
             where: {
                 id: +req.params.id,
