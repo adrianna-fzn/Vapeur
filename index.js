@@ -119,7 +119,10 @@ app.post("/games", upload.single("file"), async (req, res) => {
 
     const {title, releaseDate,desc, editorId, genreId} = await checkEditorExist(req);
 
-    const name = req.file.filename;
+    let name = "";
+
+    if (req.file)
+        name = req.file.filename;
 
     await prisma.game.create({
         data : {
@@ -157,6 +160,8 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
     //On récupère les champs highlighted et filename dans le body.
     //Ces 2 champs ne sont pas présents dans l'ajout normal alors on peut pas récupérer depuis checkEditorExist.
     let { highlighted, filename } = req.body;
+    if (filename === undefined)
+        filename = "";
 
     highlighted = highlighted === "oui";
     const name = req.file ? req.file.filename : filename;
