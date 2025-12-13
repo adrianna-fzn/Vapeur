@@ -314,7 +314,6 @@ app.get("/genres/:id", async (req, res) => {
     } catch (err) {
         res.status(404).redirect("/zx");
     }
-
 })
 
 
@@ -423,7 +422,6 @@ const toArray = (elt) => {
     return Array.isArray(elt) ? elt : [elt]
 }
 
-//Ajouter/creer un editeur
 app.post("/editors", async (req, res) => {
     let { name, games } = req.body;
 
@@ -506,6 +504,52 @@ app.post("/editors/:id/delete", async (req, res) => {
     res.status(400).send("Un jeu possède cet éditeur !");
     }
 })
+
+
+
+
+
+
+app.get("/editors/:id/edit", async (req, res) =>{
+    try{
+        const editor = await prisma.editor.findFirst({
+            where : {
+                id : +req.params.id,
+            }
+        });
+
+        res.render("editors/edit", { editor });
+    } catch (error) {
+        console.error(error);
+        res.status(400).send("Un problème !");
+    }
+})
+
+app.post("/editors/:id/edit", async (req, res) =>{
+    console.log("dans le post");
+    try{
+        const {name} = req.body;
+        await prisma.editor.update ({
+            where : {
+                id : +req.params.id
+            },
+            data : {
+                name
+            }
+        });
+        res.redirect("/editors");
+    }catch(error){
+        console.error(error);
+        res.status(400).send("Un probleme !")
+    }
+})
+
+
+
+
+
+
+
 
 
 
