@@ -1,0 +1,73 @@
+body{
+    text-align: center;
+}
+
+fieldset
+{
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-color: #18212e;
+    border-width: 5px;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin: 0;
+    margin-top: 4vh;
+    margin-bottom: 8vh;
+    /*width: fit-content;*/
+    width: 50%;
+    legend
+    {
+        text-align: center;
+        font-weight: bolder;
+    }
+    .title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.2rem;
+    }
+
+    .title h1 {
+        margin: 0;
+        font-size: 3em;
+    }
+
+    .releaseDate {
+        margin: 0;
+        font-size: 0.9em;
+        color: #919199;
+    }
+}
+
+
+
+.gameImage{
+    max-width: 50vw;
+    min-width: 50vw;
+    min-height: 60vh;
+    max-height: 60vh;
+    border-radius: 0.5rem;
+    box-shadow : #2b3b54 0px 0px 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 5vh;
+    li{
+        padding: 0.5vh;
+    }
+}
+
+.desc {
+    text-align: center;
+    width: 75%;
+    padding-bottom: 3rem;
+}
+
+
+.boldList{
+    font-size: 1.5em;
+}

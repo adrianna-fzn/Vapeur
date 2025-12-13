@@ -7,7 +7,6 @@ ul {
     width: 50%;
     align-self: center;
     justify-content: center;
-    align-items: center;
 
 }
 
@@ -43,74 +42,4 @@ fieldset
     min-height: 35vh;
     border-radius: 0.5rem;
     box-shadow : #2b3b54 0px 0px 20px;
-}
-
-.butons {
-    display: flex;
-    align-items: center;   /* alignement vertical strict */
-    gap: 0.5rem;
-}
-
-/* le form ne doit pas créer de décalage */
-.butons form {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-}
-
-/* style commun aux boutons */
-.button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* image dans le bouton */
-.button img {
-    display: block;       /* supprime l’espace inline */
-    width: 24px;
-    height: 24px;
-}
-
-
-.button {
-    background: none;          /* pas de fond */
-    border: none;              /* pas de bordure */
-    padding: 0.5rem;
-    cursor: pointer;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: transform 0.2s ease, filter 0.2s ease;
-}
-
-.button img {
-    width: 32px;               /* adapte à ton image */
-    height: 32px;
-    pointer-events: none;      /* évite bugs de clic */
-}
-
-/* effet au survol */
-.button:hover {
-    transform: scale(1.1);
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
-}
-
-/* effet au clic */
-.button:active {
-    transform: scale(0.95);
-}
-
-/* accessibilité clavier */
-.button:focus-visible {
-    outline: 2px solid #4a90e2;
-    border-radius: 0.5rem;
 }
