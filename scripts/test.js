@@ -1,8 +1,4 @@
-const {Application} = require("express");
-const {PrismaClient} = require("@prisma/client");
-const fs = require("fs");
-const path = require("path");
-const {CModel} = require("./model.js");
+
 /**
  * @param {Application} app
  * @param {PrismaClient} prisma
@@ -16,7 +12,6 @@ async function InitTest(app, prisma, model)
     const log = (message) => {
         console.log(`[${message}]`);
     }
-
 
     // const config = fs.readFileSync(path.join(__dirname,"..","config.json")).toString();
     // const Json = JSON.parse(config);
