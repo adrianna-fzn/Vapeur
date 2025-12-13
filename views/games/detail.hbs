@@ -1,9 +1,22 @@
-<h1>{{game.title}}</h1>
-<img src="/{{game.filename}}" alt="Icon - {{game.title}}" />
-<ul>
-    <li>{{game.title}}</li>
-    <li>{{game.desc}}</li>
-    <li>{{dateFormat game.releaseDate}}</li>
-    <li>{{game.editor.name}}</li>
-    <li>{{game.genre.name}}</li>
-</ul>
+<fieldset>
+    <legend>
+        <div class="title">
+            <h1>{{game.title}}</h1>
+            <p class="releaseDate">
+                <i>{{dateFormat game.releaseDate}}</i>
+            </p>
+        </div>
+    </legend>
+
+    <img src="/uploads/{{game.filename}}" alt="Icon - {{game.title}}" class="gameImage" />
+    <ul>
+        <li><i>editeur :</i> <b class="boldList">
+            <a class="link" href="/editors/{{game.editor.id}}">{{game.editor.name}}</a>
+        </b></li>
+        <li><i>genre :</i> <b class="boldList">
+            <a class="link" href="/genres/{{game.genre.id}}">{{game.genre.name}}</a>
+        </b></li>
+    </ul>
+    <p class="desc">{{game.desc}}</p>
+    {{> editButtons id=game.id highlighted=game.highlighted}}
+</fieldset>

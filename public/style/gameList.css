@@ -1,0 +1,63 @@
+ul {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    width: 50%;
+    align-self: center;
+    justify-content: center;
+
+}
+
+ul:has(> :only-child) {
+    grid-template-columns: repeat(1, 1fr);
+}
+
+body{
+    text-align: center;
+}
+
+fieldset
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-color: #18212e;
+    border-width: 5px;
+    border-radius: 1rem;
+    padding: 2rem;
+    legend
+    {
+        text-align: center;
+        font-weight: bolder;
+        font-size: 1.5em;
+    }
+}
+
+.gameImage{
+    max-height: 35vh;
+    max-width: 31vw;
+    min-width: 31vw;
+    min-height: 35vh;
+    border-radius: 0.5rem;
+    box-shadow : #2b3b54 0px 0px 20px;
+    margin-bottom: 1.5vh;
+}
+
+.link{
+    text-decoration: underline;
+}
+
+.link:hover{
+    color: #89b8ff;
+}
+
+.gameImage:hover {
+    transform: scale(1.005);
+    filter: drop-shadow(0 0px 1px #364868);
+}
+
+.gameImage:active {
+    transform: scale(0.95);
+}

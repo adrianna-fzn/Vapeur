@@ -1,5 +1,4 @@
 const { Instance } = require("hbs");
-const hbs = require("hbs");
 const path = require("path");
 
 /**

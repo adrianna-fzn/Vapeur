@@ -3,6 +3,12 @@
     <img class="DragDropImg" src="/Images/DRAG_AND_DROP.png" loading="lazy" alt="Image drag & drop"/>
 </section>
 <form action="{{ default action "/games"}}" method="post" enctype="multipart/form-data">
+    {{#if highlighted}}
+        <input hidden name="highlighted" value="{{highlighted}}" type="text"/>
+    {{/if}}
+    {{#if filename}}
+        <input hidden name="filename" value="/uploads/{{filename}}" type="text"/>
+    {{/if}}
     <fieldset>
         <legend>{{form_title}}</legend>
         <section>
@@ -51,7 +57,7 @@
                     Cliquez ou glissez
 
                 </label>
-                <input type="file" name="file" id="file" value="no-file"
+                <input type="file" name="file" id="file" value=""
                     {{#if file_required}}
                        required
                     {{/if}}
@@ -59,12 +65,14 @@
             </div>
 
             <section id="preview-container">
-
+                {{#if filename}}
+                    <img src="/uploads/{{filename}}" alt="preview image {{title}}" />
+                {{/if}}
             </section>
             <input type="submit" value="{{ default submit_text "Ajouter"}}">
         </section>
     </fieldset>
 </form>
 
-<script type="text/javascript" src="/dropFile.js">
+<script type="text/javascript" src="/scripts/dropFile.js">
 </script>

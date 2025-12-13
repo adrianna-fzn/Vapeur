@@ -49,29 +49,9 @@ class CModel
     {
         const genres = ["Action", "Aventure", "RPG", "Simulation", "Sport", "MMORPG"];
 
-
-        // Créé un tableau de type :
-        //
-        // [
-        //     {name : "Action"},
-        //     {name: "Aventure"},
-        //     {name: "RPG"},
-        //     {name: "Simulation"},
-        //     {name: "Sport"},
-        //     {name: "MMORPG"},
-        // ]
-
-
-        const m = genres.map(genre => {
-            return {
-                name: genre
-            }}
-        );
-
         if(await this.prisma.genre.count() === 0)
         {
             await this.prisma.genre.createMany({
-
                  data : genres.map(genre => {
                      return {
                          name: genre
@@ -82,7 +62,22 @@ class CModel
         }
     }
 
+    async EditorCreation()
+    {
+        const editors = ["EA","ROCKSTAR"];
 
+        if(await this.prisma.genre.count() !== 0)
+            return;
+
+        await this.prisma.genre.createMany({
+
+            data : editors.map(editor => {
+                return {
+                    name: editor
+                };
+            })
+        });
+    }
 }
 
 module.exports = {
