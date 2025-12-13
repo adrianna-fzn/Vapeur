@@ -10,8 +10,12 @@
 
     <img src="/{{game.filename}}" alt="Icon - {{game.title}}" class="gameImage" />
     <ul>
-        <li><i>editeur :</i> <b class="boldList">{{game.editor.name}}</b></li>
-        <li><i>genre :</i> <b class="boldList">{{game.genre.name}}</b></li>
+        <li><i>editeur :</i> <b class="boldList">
+            <a class="link" href="/editors/{{game.editor.id}}">{{game.editor.name}}</a>
+        </b></li>
+        <li><i>genre :</i> <b class="boldList">
+            <a class="link" href="/genres/{{game.genre.id}}">{{game.genre.name}}</a>
+        </b></li>
     </ul>
     <p class="desc">{{game.desc}}</p>
     {{> editButtons id=game.id highlighted=game.highlighted}}

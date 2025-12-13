@@ -42,4 +42,22 @@ fieldset
     min-height: 35vh;
     border-radius: 0.5rem;
     box-shadow : #2b3b54 0px 0px 20px;
+    margin-bottom: 1.5vh;
+}
+
+.link{
+    text-decoration: underline;
+}
+
+.link:hover{
+    color: #89b8ff;
+}
+
+.gameImage:hover {
+    transform: scale(1.005);
+    filter: drop-shadow(0 0px 1px #364868);
+}
+
+.gameImage:active {
+    transform: scale(0.95);
 }

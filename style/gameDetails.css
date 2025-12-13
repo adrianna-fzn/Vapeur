@@ -50,6 +50,7 @@ fieldset
     max-height: 60vh;
     border-radius: 0.5rem;
     box-shadow : #2b3b54 0px 0px 20px;
+    margin-top: 1.5vh;
 }
 
 ul {
@@ -70,4 +71,12 @@ ul {
 
 .boldList{
     font-size: 1.5em;
+}
+
+.link{
+    text-decoration: underline;
+}
+
+.link:hover{
+    color: #92b6ea;
 }
