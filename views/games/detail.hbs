@@ -14,9 +14,11 @@
         <img src="/Images/gameImageDefault.jpeg" alt="Icon - {{game.title}}" class="gameImage" />
     {{/if}}
     <ul>
-        <li><i>editeur :</i> <b class="boldList">
-            <a class="link" href="/editors/{{game.editor.id}}">{{game.editor.name}}</a>
-        </b></li>
+        {{#if game.editor}}
+            <li><i>editeur :</i> <b class="boldList">
+                <a class="link" href="/editors/{{game.editor.id}}">{{game.editor.name}}</a>
+            </b></li>
+        {{/if}}
         <li><i>genre :</i> <b class="boldList">
             <a class="link" href="/genres/{{game.genre.id}}">{{game.genre.name}}</a>
         </b></li>

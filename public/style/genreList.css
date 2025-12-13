@@ -1,0 +1,48 @@
+.link{
+    text-decoration: underline;
+}
+
+.link:hover{
+    color: #89b8ff;
+}
+
+h1{
+    padding-top: 1rem;
+}
+
+body
+{
+    text-align: center;
+}
+
+ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 2rem auto;
+    max-width: 900px;
+}
+
+ul li {
+    background: #18212e;
+    border-radius: 1rem;
+    box-shadow: #1b242e 0px 0px 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+ul li:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0px 1px #58759f);
+}
+
+ul li a {
+    display: block;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.2em;
+}

@@ -48,6 +48,9 @@ app.get("/genres", async (req, res) => {
     res.render("genres/index", {
         genres,
         pageTitle: "Liste des genres",
+        styles : [
+            "genreList.css"
+        ]
     });
 })
 
