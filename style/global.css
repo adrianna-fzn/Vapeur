@@ -7,5 +7,51 @@ body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+header{
+    font-size: 35px;
+    text-align: center;
+    z-index: 15;
+    box-shadow: 0px 10px 50px #00000079;
+    background-color: #080b0f;
+    /*background-color: red;*/
+}
 
+div.boutons{
+    display: inline-flex;
+    color: white;
+    padding: 30px;
+    font-size: 20px;
+    transform-origin: 50% 50%;
+    transition-property: all;
+    transition-duration: 0.2s;
+}
+
+div.boutons:hover{
+    background-color: #8fcdff;
+    text-shadow: 2px 2px 20px #000000;
+    transform: skewX(-3deg) scale(1.1);
+}
+
+div.logo{
+    display: inline-block;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif ;
+    transform-origin: 50% 50%;
+    transition-property: all;
+    transition-duration: 0.2s;
+    padding: 25px;
+}
+
+div.logo:hover{
+    transform: scale(1.1);
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+a.logo,a.b{
+    text-align: center;
+    text-decoration: none;
+}
 

@@ -1,14 +1,6 @@
-<h1>liste des jeux</h1>
-<ul>
-    {{#each games}}
-        <li>
-            <a href="/games/{{id}}"><img src="{{filename}}"><b>{{title}}</b></a> <i>({{Year releaseDate}})</i>
-            <form action="/games/{{id}}/delete" method="post">
-                <input type="submit" value="Supprimer">
-            </form>
-            <form action="/games/{{id}}/highlight" method="post">
-                <input type="submit" value="Mettre en avant">
-            </form>
-        </li>
-    {{/each}}
-</ul>
+<h1>Les jeux</h1>
+{{> game_list
+        games=games
+        title=title
+        site=site
+}}
