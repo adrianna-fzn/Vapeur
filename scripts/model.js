@@ -45,9 +45,39 @@ class CModel
         return {editors,genres};
     }
 
+    async GenresCreation()
+    {
+        const genres = ["Action", "Aventure", "RPG", "Simulation", "Sport", "MMORPG"];
 
+        if(await this.prisma.genre.count() === 0)
+        {
+            await this.prisma.genre.createMany({
+                 data : genres.map(genre => {
+                     return {
+                         name: genre
+                     };
+                 })
+            });
 
+        }
+    }
 
+    async EditorCreation()
+    {
+        const editors = ["EA","ROCKSTAR"];
+
+        if(await this.prisma.genre.count() !== 0)
+            return;
+
+        await this.prisma.genre.createMany({
+
+            data : editors.map(editor => {
+                return {
+                    name: editor
+                };
+            })
+        });
+    }
 }
 
 module.exports = {

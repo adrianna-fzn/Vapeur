@@ -24,6 +24,7 @@
   "homepage": "https://github.com/adrianna-fzn/Vapeur#readme",
   "dependencies": {
     "@prisma/client": "^6.19.0",
+    "@types/express": "^5.0.6",
     "body-parser": "^2.2.1",
     "express": "^5.2.1",
     "hbs": "^4.2.0",
@@ -32,8 +33,7 @@
     "prisma": "6.19.0",
     "sqlite3": "^5.1.7"
   },
-
   "nodemonConfig": {
-      "ext" : "hbs,js"
+    "ext": "hbs,js"
   }
 }

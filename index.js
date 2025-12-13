@@ -6,15 +6,20 @@ const fs = require("fs");
 const hbs = require("hbs");
 const multer = require("multer");
 
-const {CModel} = require("./scripts/model");
-const {init} = require("./scripts/config_hbs");
+const {CModel} = require("./scripts/model.js");
+const {init} = require("./scripts/config_hbs.js");
+const {InitTest} = require("./scripts/test.js");
 
 const app = express();
 const prisma = new PrismaClient();
+
 //Ne pas toucher
 const PORT = +(process.env.PORT || 8080);
 
+
 const model = new CModel(prisma);
+InitTest(app,prisma,model);
+model.GenresCreation();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -36,7 +41,11 @@ const getUrl = () => {
 }
 //route vers la liste de des genres
 app.get("/genres", async (req, res) => {
-    const genres = await prisma.genre.findMany();
+    const genres = await prisma.genre.findMany({
+        orderBy : {
+            name : "asc"
+        }
+    });
     res.render("genres/index", { genres });
 })
 
@@ -154,6 +163,7 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
     res.redirect("/");
 })
 
+
 app.post("/games/:id/delete", async (req, res) => {
     try{
         await prisma.game.delete({
@@ -186,7 +196,10 @@ app.get("/games", async (req, res) => {
 
 app.get("/games/:id", async (req, res) => {
     const id = +req.params.id;
-
+    if(!id)
+    {
+        res.redirect("/games");
+    }
     const game = await prisma.game.findFirst({
         where : {
             id
@@ -254,7 +267,7 @@ app.get("/games/:id/edit", async (req, res) => {
         title : game.title,
         desc : game.desc,
         genreName : game.genre.name,
-        editorName : game.editor.name,
+        editorName : game.editor?.name ?? "Aucun éditeur",
         editors,
         genres,
         date: date.toISOString().split("T")[0],
@@ -351,8 +364,9 @@ app.post("/games/:id/highlight", async (req, res) => {
     res.redirect("/games");
 })
 
-//Ajouter/creer un editeur
 
+
+//Ajouter/creer un editeur
 app.post("/editors", async (req, res) => {
     const { name } = req.body;
     if(AddEditor(name) !== false)
@@ -370,9 +384,19 @@ app.get("/editors/add", async (req, res) => {
 })
 
 app.get("/editors", async (req, res) => {
-    const editors = await prisma.editor.findMany();
+    const editors = await prisma.editor.findMany({
+        orderBy : {
+            name : "asc"
+        }
+    });
+
     res.render("editors/index", { editors });
 })
+
+
+
+
+
 
 //Affiche l'editeur qui correspond à l'id
 app.get("/editors/:id", async (req, res) => {
@@ -397,6 +421,23 @@ app.get("/editors/:id", async (req, res) => {
         res.status(404).redirect("/zx");
     }
 })
+
+app.post("/editors/:id/delete", async (req, res) => {
+    try{
+        await prisma.editor.delete({
+            where:{
+                id : +req.params.id,
+            }
+        })
+        res.status(201).redirect("/editors");
+    }catch (error){
+        console.error(error);
+    res.status(400).send("Un jeu possède cet éditeur !");
+    }
+})
+
+
+
 
 
 app.use((req, res, next) => {

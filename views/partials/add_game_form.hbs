@@ -1,3 +1,7 @@
+<section class="DragDropSection disable">
+    <div class="blurBox"></div>
+    <img class="DragDropImg" src="/Images/DRAG_AND_DROP.png" loading="lazy" alt="Image drag & drop"/>
+</section>
 <form action="{{ default action "/games"}}" method="post" enctype="multipart/form-data">
     <fieldset>
         <legend>{{form_title}}</legend>
@@ -44,7 +48,7 @@
 
             <div class="vertical_form_field">
                 <label for="file" id="file-drop">
-                    Cliquez ou drop pour ajouter un fichier
+                    Cliquez ou glissez
 
                 </label>
                 <input type="file" name="file" id="file" value="no-file"
