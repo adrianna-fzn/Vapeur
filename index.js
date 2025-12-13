@@ -314,7 +314,11 @@ app.get("/genres/:id", async (req, res) => {
         res.render("genres/detail", {
             pageTitle : "Genre : " + genre.name,
             genre,
-            games: genre.Game
+            games: genre.Game,
+            styles : [
+                "gameList.css",
+                "editButtons.css"
+            ]
         });
 
     } catch (err) {
@@ -486,7 +490,11 @@ app.get("/editors/:id", async (req, res) => {
         res.render("editors/detail", {
             editor: editor,
             games: editor.Game,
-            pageTitle: `Editeur : ${editor.name}`
+            pageTitle: `Editeur : ${editor.name}`,
+            styles : [
+                "gameList.css",
+                "editButtons.css"
+            ]
         });
 
     } catch (err){//Gère l'erreur quand l'id n'existe pas
