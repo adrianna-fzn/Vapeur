@@ -1,7 +1,26 @@
 
 <form method="post" action="/editors">
-    <label>Nom : </label>
-    <input type="text" name="name" placeholder="name" required>
-    <input type="submit" value="Ajouter l'éditeur">
+    <fieldset>
+        <legend>Ajout d'un editeur</legend>
 
+        {{> form_field
+                name="name"
+                type="text"
+                required="required"
+                label_text="Nom :"
+                placeholder="Le nom de l'editeur"
+                value=editor_name
+        }}
+
+        <div class="form_field">
+            <label for="games">Ses jeux</label>
+            <select name="games" id="games" multiple>
+                {{#each games}}
+                    <option value="{{id}}">{{title}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <input type="submit" value="{{ default submit_text "Ajouter"}}">
+    </fieldset>
 </form>

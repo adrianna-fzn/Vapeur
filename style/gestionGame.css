@@ -5,6 +5,10 @@
         position: fixed;
         z-index: 10;
 
+form
+{
+    margin-top: 5em;
+    align-self: center;
         .DragDropImg
         {
             width: 100%;
