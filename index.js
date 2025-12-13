@@ -161,7 +161,7 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
     highlighted = highlighted === "oui";
     const name = req.file ? req.file.filename : filename;
 
-    if(editorId !==-1)
+    if(editorId !== -1)
         await prisma.game.update({
             data : {
                 title,
