@@ -34,9 +34,6 @@ Vapeur est une application web dynamique ayant pour but de gérer une collection
 
 <pre>
 Vapeur/
-├── pageScript/
-│   ├── buttons.js
-│   └── dropFile.js
 ├── prisma/
 │   ├── migrations/
 │   │   ├── 20251206114141_1st_migration/
@@ -53,23 +50,28 @@ Vapeur/
 │   └── schema.prisma
 ├── public/
 │   ├── Images/
-│       ├── DRAG_AND_DROP.png
-│       ├── deleteButton.png
-│       └── editButton.png
+│   │   ├── DRAG_AND_DROP.png
+│   │   ├── deleteButton.png
+│   │   └── editButton.png
+│   ├── scripts/
+│   │   ├── buttons.js
+│   │   └── dropFile.js
+│   ├── style/
+│   │   ├── editButtons.css
+│   │   ├── gameDetails.css
+│   │   ├── gameList.css
+│   │   ├── gestionGame.css
+│   │   └── global.css
+│   ├── uploads/
 ├── scripts/
 │   ├── config_hbs.js
 │   ├── model.js
 │   └── test.js
-├── style/
-│   ├── editButtons.css
-│   ├── gameDetails.css
-│   ├── gameList.css
-│   ├── gestionGame.css
-│   └── global.css
 ├── views/
 │   ├── editors/
 │   │   ├── add.hbs
 │   │   ├── detail.hbs
+│   │   ├── edit.hbs
 │   │   └── index.hbs
 │   ├── games/
 │   │   ├── add.hbs
