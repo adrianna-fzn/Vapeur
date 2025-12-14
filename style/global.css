@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #0b0f15;
+    color: #fff;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
+.active
+{
+    display: block;
+}
+
+.disable
+{
+    display: none;
+}
+
+.blurBox
+{
+    backdrop-filter: blur(0.2em);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 0
+}
