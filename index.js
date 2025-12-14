@@ -103,6 +103,7 @@ app.post("/games", upload.single("file"), async (req, res) => {
 
     const {title, releaseDate,desc, editorId, genreId} = await checkEditorExist(req);
 
+    console.log(req.file);
     let name = "";
 
     if (req.file)
@@ -114,13 +115,13 @@ app.post("/games", upload.single("file"), async (req, res) => {
             releaseDate : new Date(releaseDate),
             desc,
             genreId,
-            editorId,
+            editorId : editorId === -1 ? undefined : editorId,
             highlighted : false,
             filename : `${name}`
         }
     })
 
-    res.redirect("/");
+    res.redirect("/games");
 });
 
 app.get("/games/add", async (req, res) => {
@@ -147,15 +148,18 @@ app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
     if (filename === undefined)
         filename = "";
 
-    filename = filename.replace("uploads","");
     highlighted = highlighted === "oui";
     const name = req.file ? req.file.filename : filename;
 
     //Supprimer l'ancienne image
     try{
         console.log(filename);
-        if(filename)
+        if(req.file && req.file.filename !== filename)
+        {
             fs.rmSync(path.join(__dirname,"public","uploads",filename));
+            console.log(path.join(__dirname,"public","uploads",filename) + " deleted");
+        }
+
     }
     catch (err)
     {

@@ -5,17 +5,27 @@
     z-index: 10;
 }
 
+.DragDropImg
+{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 10;
+}
+
 form
 {
     align-self: center;
     margin-top: 5em;
 
-    .DragDropImg
+    input::-webkit-calendar-picker-indicator {
+        background-image: url('/Images/calendar.png');
+    }
+
+    .blurBox
     {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        z-index: 10;
+        position: relative;
+        z-index: 1;
     }
 
     fieldset

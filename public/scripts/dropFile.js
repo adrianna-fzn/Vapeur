@@ -9,6 +9,9 @@
 
     const fileInput = document.querySelector("#file");
 
+    if(!(fileInput instanceof HTMLInputElement))
+        return;
+
     /**
      * @param {Event} e
      * */
@@ -47,8 +50,9 @@
         const files = e.dataTransfer.files;
 
         if(files.length > 0 && files[0].type.startsWith("image/")){
-            fileInput.file = files[0];
-            dropZone.textContent = files[0].name;
+            fileInput.files = files;
+            dropZone.textContent = files[0].name.substring(0,20);
+            fileInput.setAttribute("value", "C:\\fakepath\\"+files[0].name);
         }
 
         dropImageSection.classList.add("disable");
@@ -59,6 +63,7 @@
     body.addEventListener("drop", handleDrop);
 
     fileInput.addEventListener("change", (e) =>  {
+        console.log(fileInput.value);
         console.log(e)
         /**
          * @type {FileList}
