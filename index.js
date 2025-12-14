@@ -441,7 +441,8 @@ app.get("/editors/add", async (req, res) => {
     res.render("editors/add", {
         pageTitle: "Ajouter une editeur",
         styles : ["form.css"],
-        games
+        games,
+        action: "/editors",
     });
 })
 
