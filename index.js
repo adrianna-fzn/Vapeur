@@ -458,7 +458,8 @@ app.get("/editors", async (req, res) => {
         styles : [
             "editorList.css",
             "editButtons.css"
-        ]
+        ],
+        action : "/editors"
     });
 })
 
@@ -533,7 +534,8 @@ app.get("/editors/:id/edit", async (req, res) =>{
             games,
             editor_name : editor.name,
             form_title : "Modification de " + editor.name,
-            ids
+            ids,
+            action: "/editors/"+ req.params.id,
         });
     } catch (error) {
         console.error(error);
@@ -541,7 +543,7 @@ app.get("/editors/:id/edit", async (req, res) =>{
     }
 })
 
-app.post("/editors/:id/edit", async (req, res) =>{
+app.post("/editors/:id", async (req, res) =>{
     console.log("dans le post");
     try{
         const {name} = req.body;
