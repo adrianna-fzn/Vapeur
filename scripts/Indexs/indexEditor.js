@@ -96,9 +96,9 @@ module.exports = function(app, prisma, model) {
                 ]
             });
 
-        } catch (err){//Gère l'erreur quand l'id n'existe pas
-            // res.status(404).redirect("/zx");
-            const e = new Error("huiduhd");
+        }
+        catch (err){//Gère l'erreur quand l'id n'existe pas
+            let e = new Error(`L'éditeur d'ID ${Number(req.params.id)} n'existe pas !`);
             e.status = 404;
             next(e);
         }
@@ -118,7 +118,7 @@ module.exports = function(app, prisma, model) {
         }
     });
 
-    app.get("/editors/:id/edit", async (req, res) =>{
+    app.get("/editors/:id/edit", async (req, res,next) =>{
         try{
             /**
              * @type {import('./scripts/type').editor_t}
@@ -147,13 +147,14 @@ module.exports = function(app, prisma, model) {
                 action: "/editors/"+ req.params.id,
             });
         } catch (error) {
-            console.error(error);
-            res.status(400).send("Un problème !");
+            const e = new Error(`L'éditeur d'ID ${Number(req.params.id)} n'existe pas !`);
+            e.status = 404;
+            next(e);
         }
     });
 
 
-    app.post("/editors/:id", async (req, res) =>{
+    app.post("/editors/:id", async (req, res,next) =>{
         console.log("dans le post");
         try{
             const {name} = req.body;
@@ -167,8 +168,9 @@ module.exports = function(app, prisma, model) {
             });
             res.redirect("/editors");
         }catch(error){
-            console.error(error);
-            res.status(400).send("Un probleme !")
+            const e = new Error(`L'éditeur d'ID ${Number(req.params.id)} n'existe pas !`);
+            e.status = 404;
+            next(e);
         }
     });
 }

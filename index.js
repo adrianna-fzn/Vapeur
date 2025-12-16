@@ -75,9 +75,9 @@ editor(app, prisma, model);
 ///////////////////////////////GESTION DES ERREURS
 
 app.use((req, res, next) => {
-    res.status(404).render("404", {
-        message : "La page que vous cherchez n'existe pas !"
-    });
+    const e = new Error("La page que vous cherchez n'existe pas !");
+    e.status = 404;
+    next(e);
 })
 
 /**
@@ -89,10 +89,14 @@ app.use((req, res, next) => {
  * */
 const errorHandler = (err, req, res, next) => {
     console.log(err.stack);
-    res.render("505");
+    // res.render("505");
     if(err.status === 404)
-        res.render("404",{
+        res.status(404).render("404", {
             message : err.message,
+        })
+    if(err.status === 400)
+        res.status(400).render("400", {
+            message: err.message,
         })
 }
 
