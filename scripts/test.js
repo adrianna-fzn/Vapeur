@@ -4,7 +4,7 @@
  * @param {PrismaClient} prisma
  * @param {CModel} model
  * */
-async function InitTest(app, prisma, model)
+function InitTest(app, prisma, model)
 {
     /**
      * @param {string} message

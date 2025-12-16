@@ -52,7 +52,6 @@ module.exports = function(app, prisma, model){
 
         const {title, releaseDate,desc, editorId, genreId} = await checkEditorExist(req, model);
 
-        console.log(req.file);
         let name = "";
 
         if (req.file)
@@ -105,17 +104,14 @@ module.exports = function(app, prisma, model){
 
         //Supprimer l'ancienne image
         try{
-            console.log(filename);
             if(req.file && req.file.filename !== filename)
             {
                 fs.rmSync(path.join(__racineDirname,"public","uploads",filename));
-                console.log(path.join(__racineDirname,"public","uploads",filename) + " deleted");
             }
 
         }
         catch (err)
         {
-            console.error(err);
         }
 
         try {
@@ -171,13 +167,11 @@ module.exports = function(app, prisma, model){
             });
 
             try{
-                console.log(game);
                 if(game.filename)
                     fs.rmSync(path.join(__racineDirname,"public","uploads",game.filename));
             }
             catch (err)
             {
-                console.error(err);
             }
 
             await prisma.game.delete({

@@ -73,7 +73,6 @@ module.exports = function(app, prisma, model) {
     //route pour visualiser l'éditeur qui correspond à l'id
     app.get("/editors/:id", async (req, res, next) => {
         try{
-            console.log(req.params.id);
             /**
              * @type {import('../type').editors_t}
              * */
@@ -113,7 +112,6 @@ module.exports = function(app, prisma, model) {
             })
             res.status(201).redirect("/editors");
         }catch (error){
-            console.error(error);
             res.status(400).send("Un jeu possède cet éditeur !");
         }
     });
@@ -157,7 +155,6 @@ module.exports = function(app, prisma, model) {
 
     //Modification editeur
     app.post("/editors/:id", async (req, res,next) =>{
-        console.log("dans le post");
         try{
             let {name, games : EditorGames} = req.body;
             const arrayEditorGames = toArray(EditorGames).map(e => +e);
@@ -166,7 +163,6 @@ module.exports = function(app, prisma, model) {
             const gamesNotInEditor = games.filter(game => !arrayEditorGames.includes(game.id));
 
 
-            console.log(arrayEditorGames);
 
             //Transforme plusieurs promises en une unique
             await Promise.all([

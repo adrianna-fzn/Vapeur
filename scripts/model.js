@@ -31,7 +31,6 @@ class CModel
         }
         catch (err)
         {
-            console.log(err);
             return -1;
         }
 
@@ -103,14 +102,12 @@ class CModel
                 data:{ name },
             });
 
-            console.log("editor : ",editor)
 
             if(gamesIds.length > 0)
             {
 
                 const games = await this.getGames();
 
-                console.log(games);
 
                 if(!games)
                     return false;

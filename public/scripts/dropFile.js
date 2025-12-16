@@ -19,31 +19,30 @@
         e.preventDefault();
     }
 
-    /**
-     * Fonction permettant d'obtenir les dimensions d'une image à partir d'une url
-     *
-     * @param {string} url
-     * @return {Promise<{
-     *     width : number,
-     *     height : number
-     * }>}
-     * */
-    const GetDimension = url => {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.src = url;
-            img.onload = () => {
-                resolve({
-                    width: img.width,
-                    height: img.height,
-                })
-            }
-
-        })
-    }
+    // /**
+    //  * Fonction permettant d'obtenir les dimensions d'une image à partir d'une url
+    //  *
+    //  * @param {string} url
+    //  * @return {Promise<{
+    //  *     width : number,
+    //  *     height : number
+    //  * }>}
+    //  * */
+    // const GetDimension = url => {
+    //     return new Promise(resolve => {
+    //         const img = new Image();
+    //         img.src = url;
+    //         img.onload = () => {
+    //             resolve({
+    //                 width: img.width,
+    //                 height: img.height,
+    //             })
+    //         }
+    //
+    //     })
+    // }
 
     body.addEventListener("dragover", preventDefault);
-    body.addEventListener("dragenter", preventDefault);
     dropImage.addEventListener("drop", preventDefault);
     dropImageSection.addEventListener("drop", preventDefault);
 
@@ -75,7 +74,6 @@
         if(files.length > 0 && files[0].type.startsWith("image/")){
             fileInput.files = files;
             dropZone.textContent = files[0].name.substring(0,20);
-            fileInput.setAttribute("value", "C:\\fakepath\\"+files[0].name);
         }
 
         dropImageSection.classList.add("disable");
@@ -86,12 +84,10 @@
     body.addEventListener("drop", handleDrop);
 
     fileInput.addEventListener("change", async(e) =>  {
-        console.log(fileInput.value);
 
         if(e.currentTarget.files.length <= 0)
             return;
 
-        console.log(e)
         /**
          * @type {FileList}
          * */
@@ -99,7 +95,7 @@
 
         // const {height,width} = await GetDimension(URL.createObjectURL(e.currentTarget.files[0]));
         // console.log(height,width);
-        dropZone.textContent = filesList.item(0).name;
+        dropZone.textContent = filesList.item( 0).name;
 
 
         handleFile(filesList.item(0));
@@ -114,10 +110,8 @@
         const reader = new FileReader();
         reader.readAsDataURL(file);
 
-        console.log("Loading")
         // Once the file has been loaded, fire the processing
         reader.onloadend = function (e) {
-            console.log("end Loading")
             const preview = document.createElement('img');
 
             if (isValidFileType(file)) {
