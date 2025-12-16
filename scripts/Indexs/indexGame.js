@@ -72,6 +72,7 @@ module.exports = function(app, prisma, model){
     app.get("/games/add", async (req, res) => {
 
         const {editors,genres} = await model.GetEditorsAndGenres();
+
         res.render(path.join("games","add"),{
             editors,
             genres,

@@ -75,7 +75,7 @@ editor(app, prisma, model);
 ///////////////////////////////GESTION DES ERREURS
 
 app.use((req, res, next) => {
-    const e = new Error("La page que vous cherchez n'existe pas !");
+    const e = new Error("La page que vous cherchez n'existe pas ! wtf");
     e.status = 404;
     next(e);
 })

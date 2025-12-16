@@ -51,6 +51,7 @@ fieldset
     border-radius: 0.5rem;
     box-shadow : #2b3b54 0px 0px 20px;
     margin-top: 1.5vh;
+    aspect-ratio: 16/9;
 }
 
 ul {
