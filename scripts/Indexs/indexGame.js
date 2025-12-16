@@ -31,6 +31,10 @@ async function checkEditorExist(req,  model)
         if(editorId === false)
             return {};
     }
+    else if (editorName === "")
+    {
+        editorId = null;
+    }
     return {title, releaseDate, desc, genreId, editorId};
 }
 
