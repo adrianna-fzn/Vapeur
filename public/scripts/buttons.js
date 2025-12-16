@@ -1,3 +1,4 @@
+//redirige vers la route pour mettre en avant un jeu ou non
 const CheckReload = async (id) => {
     await fetch("/games/"+ id +"/highlight", {
         method: "post",
@@ -5,6 +6,7 @@ const CheckReload = async (id) => {
     window.location.reload()
 }
 
+//supprime un jeu
 const DeleteGame = async (id) => {
     await fetch("/games/"+ id +"/delete", {
         method: "post",
@@ -21,6 +23,7 @@ const DeleteGame = async (id) => {
     }
 }
 
+//supprime un editeur
 const DeleteEditor = async (id) => {
     await fetch("/editors/"+ id +"/delete", {
         method: "post",

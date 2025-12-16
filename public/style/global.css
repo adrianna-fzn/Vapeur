@@ -96,3 +96,11 @@ input
 {
     cursor: pointer;
 }
+
+.link{
+    text-decoration: underline;
+}
+
+.link:hover{
+    color: #89b8ff;
+}

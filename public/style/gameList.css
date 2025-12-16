@@ -45,14 +45,6 @@ fieldset
     margin-bottom: 1.5vh;
 }
 
-.link{
-    text-decoration: underline;
-}
-
-.link:hover{
-    color: #89b8ff;
-}
-
 .gameImage:hover {
     transform: scale(1.005);
     filter: drop-shadow(0 0px 1px #364868);
