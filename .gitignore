@@ -6,3 +6,4 @@ node_modules/
 prisma/database.db
 config.json
 public/uploads/*
+!public/uploads/.gitkeep
