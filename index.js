@@ -74,7 +74,10 @@ app.get("/", async (req, res) => {
 
 app.use((req, res, next) => {
     res.status(404).render("404", {
-        message : "La page que vous cherchez n'existe pas !"
+        message : "La page que vous cherchez n'existe pas !",
+        styles : [
+            "error.css"
+        ]
     });
 })
 
