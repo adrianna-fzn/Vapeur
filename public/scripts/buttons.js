@@ -6,6 +6,10 @@ const CheckReload = async (id) => {
 }
 
 const DeleteGame = async (id) => {
+    if (!confirm("Voulez-vous supprimer ce jeu ?")){
+            return 0
+        }
+
     await fetch("/games/"+ id +"/delete", {
         method: "post",
     })
@@ -22,6 +26,9 @@ const DeleteGame = async (id) => {
 }
 
 const DeleteEditor = async (id) => {
+    if (!confirm("Voulez-vous supprimer cet éditeur ?")){
+            return 0
+        }
     await fetch("/editors/"+ id +"/delete", {
         method: "post",
     })
