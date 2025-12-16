@@ -24,7 +24,7 @@ module.exports = function (app, prisma) {
     });
 
     //route pour visualiser un genre en fonction de son id
-    app.get("/genres/:id", async (req, res) => {
+    app.get("/genres/:id", async (req, res,next) => {
         const id = req.params.id;
         try {
 
@@ -48,7 +48,9 @@ module.exports = function (app, prisma) {
             });
 
         } catch (err) {
-            res.status(404).redirect("/zx");
+            let e = new Error(`Le genre d'ID ${Number(req.params.id)} n'existe pas !`);
+            e.status = 404;
+            next(e);
         }
     });
 }

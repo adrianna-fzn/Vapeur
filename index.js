@@ -42,9 +42,7 @@ const genre = require("./scripts/Indexs/indexGenre");
 const game = require("./scripts/Indexs/indexGame");
 const editor = require("./scripts/Indexs/indexEditor");
 
-genre(app, prisma);
-game(app, prisma, model);
-editor(app, prisma, model);
+
 
 ///////////////////////////////PAGE D'ACCUEIL
 //jeux mis en avant
@@ -70,15 +68,16 @@ app.get("/", async (req, res) => {
     });
 })
 
+genre(app, prisma);
+game(app, prisma, model);
+editor(app, prisma, model);
+
 ///////////////////////////////GESTION DES ERREURS
 
 app.use((req, res, next) => {
-    res.status(404).render("404", {
-        message : "La page que vous cherchez n'existe pas !",
-        styles : [
-            "error.css"
-        ]
-    });
+    const e = new Error("La page que vous cherchez n'existe pas !");
+    e.status = 404;
+    next(e);
 })
 
 /**
@@ -90,7 +89,15 @@ app.use((req, res, next) => {
  * */
 const errorHandler = (err, req, res, next) => {
     console.log(err.stack);
-    res.render("505");
+    // res.render("505");
+    if(err.status === 404)
+        res.status(404).render("404", {
+            message : err.message,
+        })
+    if(err.status === 400)
+        res.status(400).render("400", {
+            message: err.message,
+        })
 }
 
 app.use(errorHandler);

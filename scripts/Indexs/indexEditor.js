@@ -71,7 +71,7 @@ module.exports = function(app, prisma, model) {
     });
 
     //route pour visualiser l'éditeur qui correspond à l'id
-    app.get("/editors/:id", async (req, res) => {
+    app.get("/editors/:id", async (req, res, next) => {
         try{
             console.log(req.params.id);
             /**
@@ -96,8 +96,11 @@ module.exports = function(app, prisma, model) {
                 ]
             });
 
-        } catch (err){//Gère l'erreur quand l'id n'existe pas
-            res.status(404).redirect("/zx");
+        }
+        catch (err){//Gère l'erreur quand l'id n'existe pas
+            let e = new Error(`L'éditeur d'ID ${Number(req.params.id)} n'existe pas !`);
+            e.status = 404;
+            next(e);
         }
     });
 
@@ -115,7 +118,7 @@ module.exports = function(app, prisma, model) {
         }
     });
 
-    app.get("/editors/:id/edit", async (req, res) =>{
+    app.get("/editors/:id/edit", async (req, res,next) =>{
         try{
             /**
              * @type {import('./scripts/type').editor_t}
@@ -145,14 +148,15 @@ module.exports = function(app, prisma, model) {
                 action: "/editors/"+ req.params.id,
             });
         } catch (error) {
-            console.error(error);
-            res.status(400).send("Un problème !");
+            const e = new Error(`L'éditeur d'ID ${Number(req.params.id)} n'existe pas !`);
+            e.status = 404;
+            next(e);
         }
     });
 
 
     //Modification editeur
-    app.post("/editors/:id", async (req, res) =>{
+    app.post("/editors/:id", async (req, res,next) =>{
         console.log("dans le post");
         try{
             let {name, games : EditorGames} = req.body;
@@ -219,11 +223,10 @@ module.exports = function(app, prisma, model) {
             ]);
 
             res.redirect("/editors");
-
-        }
-        catch(error){
-            console.error(error);
-            res.status(400).send("Un probleme !")
+        }catch(error){
+            const e = new Error(`L'éditeur d'ID ${Number(req.params.id)} n'existe pas !`);
+            e.status = 404;
+            next(e);
         }
     });
 }
