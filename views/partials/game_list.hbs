@@ -18,5 +18,14 @@
     {{/each}}
 </ul>
 
+
+<script>
+    const images = document.querySelectorAll('.gameImage');
+    images.forEach(image => {
+        image.addEventListener('error', () => {
+            image.src = '/Images/gameImageDefault.jpeg';
+        })
+    })
+</script>
 <script src="/scripts/buttons.js" type="text/javascript">
 </script>

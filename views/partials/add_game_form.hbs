@@ -12,15 +12,22 @@
     <fieldset>
         <legend>{{form_title}}</legend>
         <section>
-            <div class="form_field">
-                <label for="title">Titre du jeu :</label>
-                <input required type="text" name="title" id="title" placeholder="Le titre de votre jeu" value="{{title}}">
-            </div>
 
-            <div class="form_field">
-                <label for="releaseDate">Date de sortie</label>
-                <input required type="Date" name="releaseDate" id="releaseDate" value="{{date}}">
-            </div>
+            {{> form_field
+                name="title"
+                placeholder="Le titre de votre jeu"
+                required="required"
+                label_text="Titre du jeu :"
+                value=title
+            }}
+
+            {{> form_field
+                    name="releaseDate"
+                    required="required"
+                    label_text="Date de sortie"
+                    type="Date"
+                    value=date
+            }}
 
             <div class="vertical_form_field">
                 <label for="desc">Description du jeu</label>
@@ -71,7 +78,7 @@
 
             <section id="preview-container">
                 {{#if filename}}
-                    <img src="/uploads/{{filename}}" alt="preview image {{title}}" />
+                    <img src="/uploads/{{filename}}" alt="preview image {{title}}" class="gameImage"/>
                 {{else}}
                     <img src="/Images/gameImageDefault.jpeg" alt="image par défaut" />
                 {{/if}}
@@ -81,5 +88,13 @@
     </fieldset>
 </form>
 
+<script>
+    const images = document.querySelectorAll('.gameImage');
+    images.forEach(image => {
+        image.addEventListener('error', () => {
+            image.src = '/Images/gameImageDefault.jpeg';
+        })
+    })
+</script>
 <script type="text/javascript" src="/scripts/dropFile.js">
 </script>
