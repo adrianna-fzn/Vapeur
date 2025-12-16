@@ -97,7 +97,7 @@ class CModel
 
         try {
             /**
-             * @type {import("./scripts/type").editor_t | undefined}
+             * @type {import("./type").editor_t | undefined}
              * */
             const editor = await this.prisma.editor.create({
                 data:{ name },
@@ -138,10 +138,12 @@ class CModel
 
     /**
      * Méthode permettant de récupérer tous les jeux
-     * @returns {Promise<games_t>}
      * */
     async getGames(){
-        return this.prisma.game.findMany();
+
+        /**@type {import("./type").games_t}*/
+        const games = this.prisma.game.findMany();
+        return games;
     }
 
 }

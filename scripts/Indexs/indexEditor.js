@@ -137,6 +137,7 @@ module.exports = function(app, prisma, model) {
 
             const ids = games.filter(game => game.editorId === editor.id)
                 .map(game => game.id);
+
             res.render("editors/edit", {
                 editor,
                 styles : ["form.css"],
@@ -154,18 +155,73 @@ module.exports = function(app, prisma, model) {
     });
 
 
+    //Modification editeur
     app.post("/editors/:id", async (req, res,next) =>{
         console.log("dans le post");
         try{
-            const {name} = req.body;
-            await prisma.editor.update ({
-                where : {
-                    id : +req.params.id
-                },
-                data : {
-                    name
-                }
-            });
+            let {name, games : EditorGames} = req.body;
+            const arrayEditorGames = toArray(EditorGames).map(e => +e);
+
+            const games = await model.getGames();
+            const gamesNotInEditor = games.filter(game => !arrayEditorGames.includes(game.id));
+
+
+            console.log(arrayEditorGames);
+
+            //Transforme plusieurs promises en une unique
+            await Promise.all([
+
+                //Changer le nom de l'éditeur
+                prisma.editor.update ({
+                    where : {
+                        id : +req.params.id
+                    },
+
+                    data : {
+                        name
+                    }
+                }),
+
+                //Les jeux qui sont associés à l'éditeur, sont mis avec le bon editorId (Si il ne le son pas déjà)
+                prisma.game.updateMany({
+                    where : {
+                        AND : [
+                            {
+                                id: {
+                                    in: arrayEditorGames,
+                                },
+                            },
+                        ],
+                    },
+
+                    data : {
+                        editorId : +req.params.id,
+                    }
+                }),
+
+                //Les jeux qui ne sont pas associés à l'éditeur sont mis avec un editeur à null (si ils étaient associé avant)
+                prisma.game.updateMany({
+                    where : {
+                        AND : [
+                            {
+                                id : {
+                                    in : gamesNotInEditor.map(game => game.id)
+                                }
+                            },
+                            {
+                                editorId : +req.params.id,
+                            }
+                        ],
+
+
+                    },
+                    data : {
+                        editorId : null
+                    }
+                })
+
+            ]);
+
             res.redirect("/editors");
         }catch(error){
             const e = new Error(`L'éditeur d'ID ${Number(req.params.id)} n'existe pas !`);

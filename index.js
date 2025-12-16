@@ -93,15 +93,21 @@ const errorHandler = (err, req, res, next) => {
     if(err.status === 404)
         res.status(404).render("404", {
             message : err.message,
-        })
+            styles : [
+                "error.css"
+            ]
+        });
+
     if(err.status === 400)
         res.status(400).render("400", {
             message: err.message,
-        })
+            styles : [
+                "error.css"
+            ]
+        });
 }
 
 app.use(errorHandler);
-
 
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);
