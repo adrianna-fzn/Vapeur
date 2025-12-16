@@ -19,6 +19,29 @@
         e.preventDefault();
     }
 
+    /**
+     * Fonction permettant d'obtenir les dimensions d'une image à partir d'une url
+     *
+     * @param {string} url
+     * @return {Promise<{
+     *     width : number,
+     *     height : number
+     * }>}
+     * */
+    const GetDimension = url => {
+        return new Promise(resolve => {
+            const img = new Image();
+            img.src = url;
+            img.onload = () => {
+                resolve({
+                    width: img.width,
+                    height: img.height,
+                })
+            }
+
+        })
+    }
+
     body.addEventListener("dragover", preventDefault);
     body.addEventListener("dragenter", preventDefault);
     dropImage.addEventListener("drop", preventDefault);
@@ -62,13 +85,20 @@
 
     body.addEventListener("drop", handleDrop);
 
-    fileInput.addEventListener("change", (e) =>  {
+    fileInput.addEventListener("change", async(e) =>  {
         console.log(fileInput.value);
+
+        if(e.currentTarget.files.length <= 0)
+            return;
+
         console.log(e)
         /**
          * @type {FileList}
          * */
         const filesList = e.currentTarget.files;
+
+        // const {height,width} = await GetDimension(URL.createObjectURL(e.currentTarget.files[0]));
+        // console.log(height,width);
         dropZone.textContent = filesList.item(0).name;
 
 

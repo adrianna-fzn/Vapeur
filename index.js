@@ -64,13 +64,16 @@ app.get("/", async (req, res) => {
         styles : [
             "gameList.css",
             "editButtons.css"
-        ]
+        ],
+        message_error : "Il n'y a aucun jeu mis en avant !"
     });
 })
 
 genre(app, prisma);
 game(app, prisma, model);
 editor(app, prisma, model);
+
+
 
 ///////////////////////////////GESTION DES ERREURS
 
@@ -88,7 +91,6 @@ app.use((req, res, next) => {
  * @param {NextFunction} next
  * */
 const errorHandler = (err, req, res, next) => {
-    console.log(err.stack);
     // res.render("505");
     if(err.status === 404)
         res.status(404).render("404", {
@@ -98,8 +100,8 @@ const errorHandler = (err, req, res, next) => {
             ]
         });
 
-    if(err.status === 400)
-        res.status(400).render("400", {
+    if(err.status === 500)
+        res.status(500).render("500", {
             message: err.message,
             styles : [
                 "error.css"
@@ -108,6 +110,7 @@ const errorHandler = (err, req, res, next) => {
 }
 
 app.use(errorHandler);
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);

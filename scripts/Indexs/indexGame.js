@@ -3,6 +3,7 @@ const path = require("path");
 const multer = require("multer");
 const {CModel} = require("../model");
 const fs = require("fs");
+const __racineDirname = require("./../../dirname");
 
 // Configuration du stockage des fichiers
 const storage = multer.diskStorage({
@@ -30,6 +31,10 @@ async function checkEditorExist(req,  model)
         editorId = await model.AddEditor(editorName);
         if(editorId === false)
             return {};
+    }
+    else if (editorName === "")
+    {
+        editorId = null;
     }
     return {title, releaseDate, desc, genreId, editorId};
 }
@@ -72,6 +77,7 @@ module.exports = function(app, prisma, model){
     app.get("/games/add", async (req, res) => {
 
         const {editors,genres} = await model.GetEditorsAndGenres();
+
         res.render(path.join("games","add"),{
             editors,
             genres,
@@ -102,8 +108,8 @@ module.exports = function(app, prisma, model){
             console.log(filename);
             if(req.file && req.file.filename !== filename)
             {
-                fs.rmSync(path.join(__dirname,"public","uploads",filename));
-                console.log(path.join(__dirname,"public","uploads",filename) + " deleted");
+                fs.rmSync(path.join(__racineDirname,"public","uploads",filename));
+                console.log(path.join(__racineDirname,"public","uploads",filename) + " deleted");
             }
 
         }
@@ -155,10 +161,9 @@ module.exports = function(app, prisma, model){
     //route pour supprimer un jeu
     app.post("/games/:id/delete", async (req, res,next) => {
         try{
-
             const id = +req.params.id;
 
-            /**@type {import("./scripts/type").game_t | undefined}*/
+            /**@type {import("../type").game_t | undefined}*/
             const game = await prisma.game.findFirst({
                 where: {
                     id: id
@@ -168,7 +173,7 @@ module.exports = function(app, prisma, model){
             try{
                 console.log(game);
                 if(game.filename)
-                    fs.rmSync(path.join(__dirname,"public","uploads",game.filename));
+                    fs.rmSync(path.join(__racineDirname,"public","uploads",game.filename));
             }
             catch (err)
             {
@@ -217,7 +222,7 @@ module.exports = function(app, prisma, model){
         try {
             const id = +req.params.id;
 
-            /**@type {import("./scripts/type").games_t}*/
+            /**@type {import("../type").games_t}*/
             const game = await prisma.game.findFirst({
                 where: {
                     id
@@ -248,7 +253,7 @@ module.exports = function(app, prisma, model){
     app.get("/games/:id/edit", async (req, res,next) => {
         const id = +req.params.id;
 
-        /**@type {import("./scripts/type").games_t}*/
+        /**@type {import("../type").games_t}*/
         const game = await prisma.game.findFirst({
             where : {
                 id
@@ -296,7 +301,7 @@ module.exports = function(app, prisma, model){
     //route pour mettre un jeu en avant
     app.post("/games/:id/highlight", async (req, res,next) => {
 
-        /** @type {import("./scripts/type").game_t | undefined} */
+        /** @type {import("../type").game_t | undefined} */
         const game = await prisma.game.findFirst({
             where: {
                 id: +req.params.id,
