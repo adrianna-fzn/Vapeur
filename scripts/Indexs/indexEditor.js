@@ -53,12 +53,19 @@ module.exports = function(app, prisma, model) {
         /**
          * @type {import('../type').editors_t}
          * */
-        const editors = await prisma.editor.findMany({
+        let editors = await prisma.editor.findMany({
             orderBy : {
                 name : "asc"
             }
         });
 
+        /**@type {import('./scripts/type').editors_t}
+         * */
+        editors = editors.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+
+        /**
+         * @type {import('./scripts/type').editors_t}
+         * */
         res.render("editors/index", {
             editors,
             pageTitle: "Liste des editeurs",

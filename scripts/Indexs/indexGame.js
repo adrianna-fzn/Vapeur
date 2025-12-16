@@ -197,12 +197,16 @@ module.exports = function(app, prisma, model){
     app.get("/games", async (req, res) => {
 
         /**@type {import("../type").games_t}*/
-        const games = await prisma.game.findMany({
+        let games = await prisma.game.findMany({
             orderBy : [{
                 title : 'asc'
             }]
         });
 
+        /**@type {import("../type").games_t}*/
+        games = games.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+
+        /**@type {import("../type").games_t}*/
         res.render("games/list", {
             games,
             pageTitle: "Liste des jeux - Vapeur",
