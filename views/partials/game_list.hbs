@@ -7,7 +7,7 @@
                 </legend>
                 <a href="/games/{{id}}">
                     {{#if filename}}
-                        <img src="/uploads/{{filename}}" class="gameImage">
+                        <img src="/uploads/{{filename}}" class="gameImage" onerror="this.src='/Images/gameImageDefault.jpeg'">
                     {{else}}
                         <img src="/Images/gameImageDefault.jpeg" class="gameImage">
                     {{/if}}

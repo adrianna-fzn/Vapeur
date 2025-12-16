@@ -9,7 +9,7 @@
     </legend>
 
     {{#if game.filename}}
-        <img src="/uploads/{{game.filename}}" alt="Icon - {{game.title}}" class="gameImage" />
+        <img src="/uploads/{{game.filename}}" alt="Icon - {{game.title}}" class="gameImage" onerror="this.src='/Images/gameImageDefault.jpeg'"/>
     {{else}}
         <img src="/Images/gameImageDefault.jpeg" alt="Icon - {{game.title}}" class="gameImage" />
     {{/if}}

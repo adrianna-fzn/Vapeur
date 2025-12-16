@@ -78,7 +78,7 @@
 
             <section id="preview-container">
                 {{#if filename}}
-                    <img src="/uploads/{{filename}}" alt="preview image {{title}}" />
+                    <img src="/uploads/{{filename}}" alt="preview image {{title}}" onerror="this.src='/Images/gameImageDefault.jpeg'"/>
                 {{else}}
                     <img src="/Images/gameImageDefault.jpeg" alt="image par défaut" />
                 {{/if}}
