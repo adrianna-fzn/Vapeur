@@ -1,4 +1,5 @@
 const { Instance } = require("hbs");
+const hbs = require("hbs");
 const path = require("path");
 
 /**
@@ -19,17 +20,6 @@ function default_(a,b)
 }
 
 /**
- * @param {String} a
- * @param {String[]} b
- * */
-function is_in(a,b)
-{
-    if(b)
-        return b.includes(a);
-    return false;
-}
-
-/**
  * @param {Date} date
  * */
 function dateToFormat(date)
@@ -38,7 +28,6 @@ function dateToFormat(date)
 }
 
 /**
- * Fonction initialisant des éléments liés à Handlebars comme les partials, helpers
  * @param {Instance} hbs
  * */
 function init(hbs)
@@ -53,7 +42,6 @@ function init(hbs)
 
     hbs.registerHelper("areSame", (a,b) => areSame(a,b));
     hbs.registerHelper("dateFormat", (date) => dateToFormat(date));
-    hbs.registerHelper("is_in", (a,b) => is_in(a,b));
 }
 
 

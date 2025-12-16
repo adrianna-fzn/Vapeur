@@ -1,8 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const path = require("path");
 const multer = require("multer");
-const {CModel} = require("scripts/model.js");
-const bodyParser = require("body-parser");
+const {CModel} = require("../model");
 const fs = require("fs");
 
 // Configuration du stockage des fichiers
@@ -16,7 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 /**
- *  Ajoute un editeur à la base de données si il n'existe pas.
+ *  Ajoute un editeur à la base de données s'il n'existe pas.
  * @param {Express.Request} req
  * @param {CModel} model
  * */
@@ -36,29 +35,17 @@ async function checkEditorExist(req,  model)
 }
 
 /**
+ * Exporte toutes les routes concernant les jeux
  * @param {Express} app
  * @param {PrismaClient} prisma
  * @param {CModel} model
  */
 module.exports = function(app, prisma, model){
 
-    app.get("/games/add", async (req, res) => {
-        const editors = await prisma.editor.findMany();
-        const genres = await prisma.genre.findMany();
-
-        res.render(path.join("games","add"),{
-            pageTitle : "Ajouter un jeu",
-            editors,
-            genres,
-            styles : [
-                "form.css"
-            ]
-        });
-    });
-
+    //route pour créer un jeu, qui vérifie si l'éditeur existe, et si non le créé
     app.post("/games", upload.single("file"), async (req, res) => {
 
-        const {title, releaseDate,desc, editorId, genreId} = await checkEditorExist(req);
+        const {title, releaseDate,desc, editorId, genreId} = await checkEditorExist(req, model);
 
         console.log(req.file);
         let name = "";
@@ -81,6 +68,7 @@ module.exports = function(app, prisma, model){
         res.redirect("/games");
     });
 
+    //route pour visualiser la page d'ajout d'un jeu
     app.get("/games/add", async (req, res) => {
 
         const {editors,genres} = await model.GetEditorsAndGenres();
@@ -94,10 +82,11 @@ module.exports = function(app, prisma, model){
         });
     });
 
+    //route pour modifier un jeu en fonction de son id, ici aussi, si l'éditeur n'existe pas, il est créé
     app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
 
         const id = +req.params.id;
-        const {title, releaseDate,desc, editorId, genreId} = await checkEditorExist(req);
+        const {title, releaseDate,desc, editorId, genreId} = await checkEditorExist(req, model);
 
         //On récupère les champs highlighted et filename dans le body.
         //Ces 2 champs ne sont pas présents dans l'ajout normal alors on peut pas récupérer depuis checkEditorExist.
@@ -156,6 +145,7 @@ module.exports = function(app, prisma, model){
         res.redirect("/");
     });
 
+    //route pour supprimer un jeu
     app.post("/games/:id/delete", async (req, res) => {
         try{
 
@@ -190,6 +180,7 @@ module.exports = function(app, prisma, model){
         }
     });
 
+    //route pour visualiser les jeux
     app.get("/games", async (req, res) => {
 
         /**@type {import("./scripts/type").games_t}*/
@@ -209,6 +200,7 @@ module.exports = function(app, prisma, model){
         });
     });
 
+    //Route pour visualiser un jeu en details en fonction de son id
     app.get("/games/:id", async (req, res) => {
 
         const id = +req.params.id;
@@ -245,6 +237,7 @@ module.exports = function(app, prisma, model){
             ] });
     });
 
+    //route pour visualiser la page de modification d'un jeu
     app.get("/games/:id/edit", async (req, res) => {
         const id = +req.params.id;
 
@@ -291,6 +284,7 @@ module.exports = function(app, prisma, model){
         })
     });
 
+    //route pour mettre un jeu en avant
     app.post("/games/:id/highlight", async (req, res) => {
 
         /** @type {import("./scripts/type").game_t | undefined} */

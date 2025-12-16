@@ -1,12 +1,13 @@
 const { PrismaClient } = require("@prisma/client");
 
 /**
+ * Exporte toutes les routes concernant les genres
  * @param {Express} app
  * @param {PrismaClient} prisma
  */
 module.exports = function (app, prisma) {
 
-    //route vers la liste de des genres
+    //route pour visualiser la liste de des genres
     app.get("/genres", async (req, res) => {
         const genres = await prisma.genre.findMany({
             orderBy : {
@@ -22,6 +23,7 @@ module.exports = function (app, prisma) {
         });
     });
 
+    //route pour visualiser un genre en fonction de son id
     app.get("/genres/:id", async (req, res) => {
         const id = req.params.id;
         try {
