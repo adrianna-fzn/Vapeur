@@ -42,9 +42,7 @@ const genre = require("./scripts/Indexs/indexGenre");
 const game = require("./scripts/Indexs/indexGame");
 const editor = require("./scripts/Indexs/indexEditor");
 
-genre(app, prisma);
-game(app, prisma, model);
-editor(app, prisma, model);
+
 
 ///////////////////////////////PAGE D'ACCUEIL
 //jeux mis en avant
@@ -70,6 +68,10 @@ app.get("/", async (req, res) => {
     });
 })
 
+genre(app, prisma);
+game(app, prisma, model);
+editor(app, prisma, model);
+
 ///////////////////////////////GESTION DES ERREURS
 
 app.use((req, res, next) => {
@@ -88,9 +90,14 @@ app.use((req, res, next) => {
 const errorHandler = (err, req, res, next) => {
     console.log(err.stack);
     res.render("505");
+    if(err.status === 404)
+        res.render("404",{
+            message : err.message,
+        })
 }
 
 app.use(errorHandler);
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);

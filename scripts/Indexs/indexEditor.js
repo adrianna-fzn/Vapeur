@@ -71,7 +71,7 @@ module.exports = function(app, prisma, model) {
     });
 
     //route pour visualiser l'éditeur qui correspond à l'id
-    app.get("/editors/:id", async (req, res) => {
+    app.get("/editors/:id", async (req, res, next) => {
         try{
             console.log(req.params.id);
             /**
@@ -97,7 +97,10 @@ module.exports = function(app, prisma, model) {
             });
 
         } catch (err){//Gère l'erreur quand l'id n'existe pas
-            res.status(404).redirect("/zx");
+            // res.status(404).redirect("/zx");
+            const e = new Error("huiduhd");
+            e.status = 404;
+            next(e);
         }
     });
 
