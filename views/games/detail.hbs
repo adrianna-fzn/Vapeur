@@ -9,7 +9,7 @@
     </legend>
 
     {{#if game.filename}}
-        <img src="/uploads/{{game.filename}}" alt="Icon - {{game.title}}" class="gameImage" onerror="this.src='/Images/gameImageDefault.jpeg'"/>
+        <img src="/uploads/{{game.filename}}" alt="Icon - {{game.title}}" class="gameImage"/>
     {{else}}
         <img src="/Images/gameImageDefault.jpeg" alt="Icon - {{game.title}}" class="gameImage" />
     {{/if}}
@@ -27,5 +27,11 @@
     {{> editButtons id=game.id highlighted=game.highlighted}}
 </fieldset>
 
+<script>
+    const image = document.querySelector('.gameImage');
+    image.addEventListener('error', () => {
+       image.src = '/Images/gameImageDefault.jpeg';
+    })
+</script>
 <script src="/scripts/buttons.js" type="text/javascript">
 </script>

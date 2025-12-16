@@ -78,7 +78,7 @@
 
             <section id="preview-container">
                 {{#if filename}}
-                    <img src="/uploads/{{filename}}" alt="preview image {{title}}" onerror="this.src='/Images/gameImageDefault.jpeg'"/>
+                    <img src="/uploads/{{filename}}" alt="preview image {{title}}" class="gameImage"/>
                 {{else}}
                     <img src="/Images/gameImageDefault.jpeg" alt="image par défaut" />
                 {{/if}}
@@ -88,5 +88,13 @@
     </fieldset>
 </form>
 
+<script>
+    const images = document.querySelectorAll('.gameImage');
+    images.forEach(image => {
+        image.addEventListener('error', () => {
+            image.src = '/Images/gameImageDefault.jpeg';
+        })
+    })
+</script>
 <script type="text/javascript" src="/scripts/dropFile.js">
 </script>
