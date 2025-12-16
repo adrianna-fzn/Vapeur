@@ -76,14 +76,14 @@ module.exports = function(app, prisma, model){
             editors,
             genres,
             pageTitle : "Créer un jeu",
-            style : [
-                "form.css",
+            styles : [
+                "form.css"
             ]
         });
     });
 
     //route pour modifier un jeu en fonction de son id, ici aussi, si l'éditeur n'existe pas, il est créé
-    app.post("/games/:id/edit", upload.single("file"), async (req, res) => {
+    app.post("/games/:id", upload.single("file"), async (req, res) => {
 
         const id = +req.params.id;
         const {title, releaseDate,desc, editorId, genreId} = await checkEditorExist(req, model);
@@ -277,7 +277,7 @@ module.exports = function(app, prisma, model){
             filename : game.filename,
             date: date.toISOString().split("T")[0],
             submit_text : "Modifier",
-            action:`/games/${game.id}/edit`,
+            action:`/games/${game.id}`,
             styles : [
                 "form.css"
             ]
