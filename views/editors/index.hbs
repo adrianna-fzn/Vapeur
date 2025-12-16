@@ -1,24 +1,21 @@
 <h1>liste editeurs</h1>
+{{#if editors}}
+    <ul>
+        {{#each editors}}
+            <li>
+                <a href="/editors/{{id}}" class="link">{{name}}</a>
+                <!--  // on accède directement aux propriétés de l'objet courant-->
+                <div class="butons">
+                    <button type="submit" class="button" onclick="DeleteEditor({{id}})"><img src="/Images/deleteButton.png"></button>
+                    <form action="/editors/{{id}}/edit" method="get">
+                        <button type="submit" class="button"><img src="/Images/editButton.png"></button>
+                    </form>
+                </div>
+            </li>
+        {{/each}}
+    </ul>
 
-<ul>
-    {{#each editors}}
-        <li>
-            <a href="/editors/{{id}}" class="link">{{name}}</a>
-            <!--  // on accède directement aux propriétés de l'objet courant-->
-            <div class="butons">
-                <button type="submit" class="button" onclick="DeleteEditor({{id}})"><img src="/Images/deleteButton.png"></button>
-                <form action="/editors/{{id}}/edit" method="get">
-                    <button type="submit" class="button"><img src="/Images/editButton.png"></button>
-                </form>
-            </div>
-        </li>
-    {{/each}}
-</ul>
-
-<script src="/scripts/buttons.js" type="text/javascript">
-    </script>
-
-
-
-
-   
+    <script src="/scripts/buttons.js" type="text/javascript"></script>
+{{else}}
+    <p>Il n'y a aucun éditeur !</p>
+{{/if}}
