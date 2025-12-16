@@ -54,7 +54,7 @@ class CModel
 
     async GenresCreation()
     {
-        const genres = ["Action", "Aventure", "RPG", "Simulation", "Sport", "MMORPG"];
+        const genres = ["Action", "Aventure", "RPG", "Simulation", "Sport", "MMORPG", "Drogue", "Horreur", "Platforme", "Shooter", "Stratégie", "Course"];
 
         if(await this.prisma.genre.count() === 0)
         {
