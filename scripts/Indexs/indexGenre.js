@@ -10,9 +10,10 @@ module.exports = function (app, prisma) {
     //route pour visualiser la liste de des genres
     app.get("/genres", async (req, res) => {
         const genres = await prisma.genre.findMany({
-            orderBy : {
-                name : "asc"
-            }
+            orderBy :
+                {
+                    name: "asc"
+                }
         });
         res.render("genres/index", {
             genres,
