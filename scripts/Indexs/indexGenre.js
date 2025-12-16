@@ -28,7 +28,7 @@ module.exports = function (app, prisma) {
         const id = req.params.id;
         try {
 
-            /**@type {import("./scripts/type").genre_t | undefined}*/
+            /**@type {import("../type").genre_t | undefined}*/
             const genre = await prisma.genre.findUnique({
                 where: {
                     id: Number(id)

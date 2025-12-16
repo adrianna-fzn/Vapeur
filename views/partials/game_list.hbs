@@ -1,31 +1,35 @@
-<ul>
-    {{#each games}}
-        <li>
-            <fieldset>
-                <legend>
-                    <a class="link" href="/games/{{id}}"><b>{{title}}</b> <i>({{Year releaseDate}})</i></a>
-                </legend>
-                <a href="/games/{{id}}">
-                    {{#if filename}}
-                        <img src="/uploads/{{filename}}" class="gameImage">
-                    {{else}}
-                        <img src="/Images/gameImageDefault.jpeg" class="gameImage">
-                    {{/if}}
-                </a>
-                {{> editButtons}}
-            </fieldset>
-        </li>
-    {{/each}}
-</ul>
+{{#if games}}
+    <ul>
+        {{#each games}}
+            <li>
+                <fieldset>
+                    <legend>
+                        <a class="link" href="/games/{{id}}"><b>{{title}}</b> <i>({{Year releaseDate}})</i></a>
+                    </legend>
+                    <a href="/games/{{id}}">
+                        {{#if filename}}
+                            <img src="/uploads/{{filename}}" class="gameImage">
+                        {{else}}
+                            <img src="/Images/gameImageDefault.jpeg" class="gameImage">
+                        {{/if}}
+                    </a>
+                    {{> editButtons}}
+                </fieldset>
+            </li>
+        {{/each}}
+    </ul>
 
 
-<script>
-    const images = document.querySelectorAll('.gameImage');
-    images.forEach(image => {
-        image.addEventListener('error', () => {
-            image.src = '/Images/gameImageDefault.jpeg';
+    <script>
+        const images = document.querySelectorAll('.gameImage');
+        images.forEach(image => {
+            image.addEventListener('error', () => {
+                image.src = '/Images/gameImageDefault.jpeg';
+            })
         })
-    })
-</script>
-<script src="/scripts/buttons.js" type="text/javascript">
-</script>
+    </script>
+    <script src="/scripts/buttons.js" type="text/javascript"></script>
+
+{{else}}
+    <p>{{default message_error "Il n'y a pas de jeu actuellement !"}}</p>
+{{/if}}

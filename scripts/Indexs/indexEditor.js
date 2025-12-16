@@ -51,7 +51,7 @@ module.exports = function(app, prisma, model) {
     app.get("/editors", async (req, res) => {
 
         /**
-         * @type {import('./scripts/type').editors_t}
+         * @type {import('../type').editors_t}
          * */
         const editors = await prisma.editor.findMany({
             orderBy : {
@@ -75,7 +75,7 @@ module.exports = function(app, prisma, model) {
         try{
             console.log(req.params.id);
             /**
-             * @type {import('./scripts/type').editors_t}
+             * @type {import('../type').editors_t}
              * */
             const editor = await prisma.editor.findFirst({
                 where: {
@@ -121,7 +121,7 @@ module.exports = function(app, prisma, model) {
     app.get("/editors/:id/edit", async (req, res,next) =>{
         try{
             /**
-             * @type {import('./scripts/type').editor_t}
+             * @type {import('../type').editor_t}
              * */
             const editor = await prisma.editor.findFirst({
                 where : {
