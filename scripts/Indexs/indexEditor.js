@@ -20,7 +20,7 @@ const toArray = (elt) => {
 module.exports = function(app, prisma, model) {
 
     //route pour créer un éditeur
-    app.post("/editors", async (req, res) => {
+    app.post("/editors", async (req, res,next) => {
         let { name, games } = req.body;
 
         games = games === undefined ? [] : games;
@@ -30,7 +30,9 @@ module.exports = function(app, prisma, model) {
             res.status(201).redirect("/editors");
         }
         else {
-            res.status(404).redirect("/zx");
+            let e = new Error(`Il y a un problème`);
+            e.status = 404;
+            next(e);
         }
     });
 

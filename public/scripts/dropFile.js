@@ -13,6 +13,7 @@
         return;
 
     /**
+     * Fonction permettant d'empêcher le comportement par défaut du navigateur
      * @param {Event} e
      * */
     function preventDefault(e){
@@ -46,6 +47,7 @@
     dropImage.addEventListener("drop", preventDefault);
     dropImageSection.addEventListener("drop", preventDefault);
 
+    //passage en mode drag
     body.addEventListener("dragenter", (e) => {
         e.preventDefault();
         dropZone.classList.toggle("drag-over");
@@ -53,6 +55,7 @@
         dropImageSection.classList.remove("disable");
     })
 
+    //sortie du drag
     body.addEventListener("dragleave", (e) => {
         e.preventDefault();
         if(e.target === dropImage)
@@ -83,6 +86,7 @@
 
     body.addEventListener("drop", handleDrop);
 
+    // si on choisi via le bouton
     fileInput.addEventListener("change", async(e) =>  {
 
         if(e.currentTarget.files.length <= 0)

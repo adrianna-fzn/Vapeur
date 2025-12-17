@@ -49,7 +49,7 @@ const editor = require("./scripts/Indexs/indexEditor");
 app.get("/", async (req, res) => {
 
     /**@type {import("./scripts/type").games_t}*/
-    const games = await prisma.game.findMany({
+    let games = await prisma.game.findMany({
         where: {
             highlighted: true,
         },
@@ -57,6 +57,8 @@ app.get("/", async (req, res) => {
             title : 'asc'
         }]
     });
+
+    games = games.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
 
     res.render("index",{
         games,
